@@ -6,14 +6,27 @@
 " Don't use Vi-compatible mode.
 set nocompatible
 
+" Transparent background
+set termguicolors
+autocmd VimEnter,ColorScheme * highlight Normal guibg=none ctermbg=none
+autocmd VimEnter,ColorScheme * highlight NormalNC guibg=none ctermbg=none
+autocmd VimEnter,ColorScheme * highlight SignColumn guibg=none ctermbg=none
+autocmd VimEnter,ColorScheme * highlight LineNr guibg=none ctermbg=none guifg=#808080 ctermfg=LightGray
+autocmd VimEnter,ColorScheme * highlight CursorLineNr guibg=none ctermbg=none guifg=#a0a0a0 ctermfg=LightGray
+autocmd VimEnter,ColorScheme * highlight EndOfBuffer guibg=none ctermbg=none
+
 " Use the mswin.vim script for most mappings
-source <sfile>:p:h/mswin.vim
+runtime! mswin.vim
 
 " Allow for using CTRL-Q in Insert mode to quit Vim.
 inoremap <C-Q> <C-O>:confirm qall<CR>
 
-" Vim is in Insert mode by default
-set insertmode
+" Vim is in Insert mode by default (Neovim doesn't support 'insertmode')
+" Only enable easy mode when started with -y flag
+if index(v:argv, '-y') >= 0
+  autocmd BufEnter * startinsert
+  autocmd BufNewFile * startinsert
+endif
 
 " Make a buffer hidden when editing another one
 set hidden
@@ -86,10 +99,9 @@ set smartcase
 
 set clipboard^=unnamed,unnamedplus
 
-if ! &insertmode
-	set number
-	set relativenumber
-endif
+" Always show line numbers
+set number
+set relativenumber
 
 
 " Highlight the current search match differently from other matches
@@ -121,3 +133,7 @@ inoremap <c-x> <c-o>dd
 " Ctrl + d to duplicate current line
 nnoremap <c-d> yyp
 inoremap <c-d> <C-o>:normal yyp<CR>
+
+" Ctrl + a to select all
+nnoremap <c-a> ggVG
+inoremap <c-a> <Esc>ggVG
