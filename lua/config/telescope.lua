@@ -1,0 +1,133 @@
+local has_autocomplete_opt = pcall(vim.api.nvim_get_option_info2, 'autocomplete', {})
+local telescope_ok, telescope = pcall(require, 'telescope')
+local telescope_builtin = telescope_ok and require('telescope.builtin') or nil
+local telescope_themes = telescope_ok and require('telescope.themes') or nil
+local telescope_sorters = telescope_ok and require('telescope.sorters') or nil
+
+if not telescope_ok then
+  return
+end
+
+local TELESCOPE_RG_EXCLUDE_GLOBS = {
+  '!.git',
+  '!**/.git/**',
+  '!**/node_modules/**',
+  '!**/dist/**',
+  '!**/build/**',
+  '!**/.cache/**',
+  '!**/bin/**',
+  '!**/obj/**',
+  '!**/*.min.*',
+  '!**/*.d.ts',
+  '!**/*.g.cs',
+  '!**/wwwroot/lib/**',
+  '!**/*syncfusion*',
+  '!**/jquery*.js',
+  '!**/jquery*.map',
+  '!**/bootstrap*.js',
+  '!**/bootstrap*.css',
+  '!**/bootstrap*.map',
+}
+
+local function telescope_rg_glob_cli_args()
+  local args = {}
+  for _, g in ipairs(TELESCOPE_RG_EXCLUDE_GLOBS) do
+    table.insert(args, '-g')
+    table.insert(args, g)
+  end
+  return args
+end
+
+local function space_insensitive_fzy_sorter()
+  local base = telescope_sorters.get_fzy_sorter()
+  return telescope_sorters.Sorter:new({
+    discard = true,
+    scoring_function = function(_, prompt, line, ...)
+      local collapsed = (prompt or ''):gsub('%s+', '')
+      if collapsed == '' then
+        return 1
+      end
+      return base.scoring_function(_, collapsed, line, ...)
+    end,
+    highlighter = function(_, prompt, display)
+      local collapsed = (prompt or ''):gsub('%s+', '')
+      if collapsed == '' then
+        return {}
+      end
+      return base.highlighter(_, collapsed, display)
+    end,
+  })
+end
+
+telescope.setup({
+  defaults = {
+    prompt_prefix = '  ',
+    selection_caret = '  ',
+    sorting_strategy = 'ascending',
+    wrap_results = true,
+    file_sorter = space_insensitive_fzy_sorter,
+    generic_sorter = space_insensitive_fzy_sorter,
+    layout_config = {
+      prompt_position = 'top',
+    },
+    mappings = {
+      i = {
+        ['<Esc>'] = require('telescope.actions').close,
+      },
+    },
+  },
+  pickers = {
+    live_grep = {
+      additional_args = function()
+        local args = { '-i' }
+        vim.list_extend(args, telescope_rg_glob_cli_args())
+        return args
+      end,
+    },
+  },
+})
+
+local function telescope_files()
+  local find_cmd = { 'rg', '--files', '--hidden' }
+  vim.list_extend(find_cmd, telescope_rg_glob_cli_args())
+  telescope_builtin.find_files(telescope_themes.get_dropdown({
+    previewer = false,
+    hidden = true,
+    cwd = vim.fn.getcwd(),
+    find_command = find_cmd,
+  }))
+end
+
+local function telescope_live_grep()
+  telescope_builtin.live_grep({
+    cwd = vim.fn.getcwd(),
+    layout_strategy = 'vertical',
+    layout_config = {
+      height = 0.9,
+      prompt_position = 'bottom',
+      preview_height = 0.42,
+    },
+  })
+end
+
+vim.keymap.set('n', '<C-p>', telescope_files, { silent = true, desc = 'Telescope find files' })
+vim.keymap.set('n', '<leader>fg', telescope_live_grep, { silent = true, desc = 'Telescope live grep' })
+vim.keymap.set('n', '<C-S-f>', telescope_live_grep, { silent = true, desc = 'Telescope live grep (workspace)' })
+vim.keymap.set('n', '<leader>fb', telescope_builtin.buffers, { silent = true, desc = 'Telescope buffers' })
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'TelescopePrompt',
+  callback = function()
+    if has_autocomplete_opt then
+      vim.opt_local.autocomplete = false
+    end
+  end,
+})
+
+vim.api.nvim_create_autocmd('User', {
+  pattern = 'TelescopePreviewerLoaded',
+  callback = function()
+    vim.wo.wrap = true
+    vim.wo.linebreak = true
+  end,
+})
