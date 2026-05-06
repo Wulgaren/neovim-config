@@ -3,6 +3,7 @@ return {
   { 'nvim-telescope/telescope.nvim', dependencies = { 'nvim-lua/plenary.nvim' } },
   {
     'karb94/neoscroll.nvim',
+    enabled = false,
     config = function()
       local neoscroll = require('neoscroll')
 

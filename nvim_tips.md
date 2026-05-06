@@ -17,3 +17,10 @@ ctrl z twice - save and exit
 
 ctrl z ctrl q - exit without saving
 
+m + lower case letter - bookmark
+m + upper case letter - bookmark that persists across files
+' + that letter - to jump into it
+
+o - edit next line
+
+* to go to instance of the word

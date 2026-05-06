@@ -20,3 +20,8 @@ end
 
 vim.api.nvim_create_user_command('WQ', write_or_prompt_and_quit, {})
 vim.keymap.set('n', 'ZZ', write_or_prompt_and_quit, { silent = true })
+
+vim.keymap.set('n', '<C-u>', '<C-u>zz', { silent = true })
+vim.keymap.set('n', '<C-d>', '<C-d>zz', { silent = true })
+vim.keymap.set('n', '<C-f>', '<C-f>zz', { silent = true })
+vim.keymap.set('n', '<C-b>', '<C-b>zz', { silent = true })
