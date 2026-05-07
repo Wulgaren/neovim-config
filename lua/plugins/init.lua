@@ -1,6 +1,12 @@
 return {
   { 'nvim-lua/plenary.nvim' },
   { 'nvim-telescope/telescope.nvim', dependencies = { 'nvim-lua/plenary.nvim' } },
+  { 'tpope/vim-fugitive' },
+  {
+    'folke/flash.nvim',
+    event = 'VeryLazy',
+    opts = {},
+  },
   {
     'karb94/neoscroll.nvim',
     enabled = false,
@@ -30,6 +36,7 @@ return {
 
       require('nvim-treesitter').install({
         'bash',
+        'c_sharp',
         'css',
         'html',
         'javascript',
@@ -73,14 +80,65 @@ return {
     },
   },
   {
-    'windwp/nvim-autopairs',
+    'echasnovski/mini.nvim',
+    version = false,
     config = function()
-      require('nvim-autopairs').setup({})
+      require('mini.pairs').setup()
+      require('mini.surround').setup()
+      require('mini.bracketed').setup()
+      require('mini.ai').setup()
     end,
   },
   {
     'catppuccin/nvim',
     name = 'catppuccin',
+  },
+  {
+    'mason-org/mason.nvim',
+    cmd = { 'Mason', 'MasonInstall', 'MasonUpdate', 'MasonLog' },
+    opts = {
+      registries = {
+        'github:mason-org/mason-registry',
+        'github:Crashdummyy/mason-registry',
+      },
+    },
+  },
+  {
+    'seblyng/roslyn.nvim',
+    ft = { 'cs', 'razor' },
+    dependencies = { 'mason-org/mason.nvim' },
+    config = function()
+      require('roslyn').setup({
+        extensions = {
+          razor = { enabled = false },
+        },
+        broad_search = false,
+        lock_target = true,
+        -- choose_target receives *solution* paths (.sln / .slnx / .slnf), not .csproj
+        choose_target = function(targets)
+          for _, t in ipairs(targets) do
+            local b = t:lower()
+            if b:find('vario.web.app.sln', 1, true) or b:find('varioweb.app.sln', 1, true) then
+              return t
+            end
+          end
+          for _, t in ipairs(targets) do
+            local b = t:lower()
+            if b:find('varioweb', 1, true) and (vim.endswith(t, '.sln') or vim.endswith(t, '.slnx') or vim.endswith(t, '.slnf')) then
+              if not b:find('test', 1, true) then
+                return t
+              end
+            end
+          end
+          for _, t in ipairs(targets) do
+            if not t:lower():find('test', 1, true) then
+              return t
+            end
+          end
+          return targets[1]
+        end,
+      })
+    end,
   },
   {
     dir = '/Users/natios/Documents/Coding/ai-neovim',

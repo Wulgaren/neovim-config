@@ -114,6 +114,7 @@ vim.keymap.set('n', '<C-p>', telescope_files, { silent = true, desc = 'Telescope
 vim.keymap.set('n', '<leader>fg', telescope_live_grep, { silent = true, desc = 'Telescope live grep' })
 vim.keymap.set('n', '<C-S-f>', telescope_live_grep, { silent = true, desc = 'Telescope live grep (workspace)' })
 vim.keymap.set('n', '<leader>fb', telescope_builtin.buffers, { silent = true, desc = 'Telescope buffers' })
+vim.keymap.set('n', '<leader>fs', telescope_builtin.lsp_document_symbols, { silent = true, desc = 'Telescope LSP document symbols' })
 
 vim.api.nvim_create_autocmd('FileType', {
   pattern = 'TelescopePrompt',

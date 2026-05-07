@@ -4,6 +4,7 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR><Esc>', { silent = true })
 
 vim.keymap.set('n', '<leader>sr', ':%s///g<Left><Left><Left>', { desc = 'Find and replace in buffer' })
 vim.keymap.set('x', '<leader>sr', ':s///g<Left><Left><Left>', { desc = 'Find and replace in selection' })
+vim.keymap.set('x', '<leader>p', [["_dP]], { desc = 'Paste without yanking replaced text' })
 
 local function write_or_prompt_and_quit()
   if vim.fn.expand('%') == '' then
@@ -25,3 +26,7 @@ vim.keymap.set('n', '<C-u>', '<C-u>zz', { silent = true })
 vim.keymap.set('n', '<C-d>', '<C-d>zz', { silent = true })
 vim.keymap.set('n', '<C-f>', '<C-f>zz', { silent = true })
 vim.keymap.set('n', '<C-b>', '<C-b>zz', { silent = true })
+
+vim.keymap.set({ 'n', 'x', 'o' }, 'zk', function()
+  require('flash').jump()
+end, { desc = 'Flash jump' })

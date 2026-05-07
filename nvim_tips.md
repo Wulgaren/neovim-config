@@ -1,8 +1,12 @@
 gf - open file
 gx - open link
 
-ctrl + o - go to file backwards
-ctrl + i - go to file forward 
+gd - go to definition
+
+ctrl + o - go to where we were backwards
+ctrl + i - go to where we were forward 
+
+f + letter - jump to letter
 
 c - change
 
@@ -13,9 +17,9 @@ cib - change inner in ()
 ciB - change inner in {}
 
 
-ctrl z twice - save and exit
+shift z twice - save and exit
 
-ctrl z ctrl q - exit without saving
+shift z shift q - exit without saving
 
 m + lower case letter - bookmark
 m + upper case letter - bookmark that persists across files
@@ -24,3 +28,5 @@ m + upper case letter - bookmark that persists across files
 o - edit next line
 
 * to go to instance of the word
+
+when searching you can replace with ciw and then go to next word and hit . to replace it too

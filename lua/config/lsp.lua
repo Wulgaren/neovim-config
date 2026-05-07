@@ -26,26 +26,6 @@ local function root_dir(bufnr, markers)
   return vim.fs.root(path, markers) or vim.fn.getcwd()
 end
 
-local function csharp_root_dir(bufnr)
-  local path = vim.api.nvim_buf_get_name(bufnr)
-  local start = vim.fs.dirname(path)
-  if not start then
-    return vim.fn.getcwd()
-  end
-
-  if vim.fn.glob(join_path(start, '*.sln')) ~= '' or vim.fn.glob(join_path(start, '*.csproj')) ~= '' or vim.fn.isdirectory(join_path(start, '.git')) == 1 then
-    return start
-  end
-
-  for dir in vim.fs.parents(start) do
-    if vim.fn.glob(join_path(dir, '*.sln')) ~= '' or vim.fn.glob(join_path(dir, '*.csproj')) ~= '' or vim.fn.isdirectory(join_path(dir, '.git')) == 1 then
-      return dir
-    end
-  end
-
-  return vim.fn.getcwd()
-end
-
 local function start_lsp(bufnr, name, cmd, markers)
   if not cmd or not command_exists(cmd[1]) then
     return
@@ -166,20 +146,8 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'cs' },
-  callback = function(args)
-    local csharp_ls = is_windows and (home .. '\\.dotnet\\tools\\csharp-ls.exe') or join_path(home, '.dotnet', 'tools', 'csharp-ls')
-    if not command_exists(csharp_ls) then
-      return
-    end
-    vim.lsp.start({
-      name = 'csharp_ls',
-      cmd = { csharp_ls },
-      root_dir = csharp_root_dir(args.buf),
-    })
-  end,
-})
+-- C# LSP handled by roslyn.nvim plugin (see lua/plugins/init.lua).
+-- Legacy csharp-ls autocmd removed in favor of roslyn_ls.
 
 vim.api.nvim_create_autocmd('FileType', {
   pattern = { 'python' },

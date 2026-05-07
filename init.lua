@@ -1,4 +1,5 @@
 vim.g.mapleader = ' '
+vim.env.NVIM_LOG_FILE = vim.fn.stdpath('state') .. '/nvim.log'
 
 local data_path = vim.fn.stdpath('data')
 local path_sep = package.config:sub(1, 1)
