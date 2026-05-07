@@ -87,6 +87,7 @@ return {
       require('mini.surround').setup()
       require('mini.bracketed').setup()
       require('mini.ai').setup()
+      require('mini.comment').setup()
     end,
   },
   {
