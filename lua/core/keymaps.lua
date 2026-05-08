@@ -1,6 +1,7 @@
 vim.keymap.set('n', '<C-s>', '<cmd>write<CR>', { silent = true })
 vim.keymap.set('i', '<C-s>', '<Esc><cmd>write<CR>a', { silent = true })
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR><Esc>', { silent = true })
+vim.keymap.set('n', 'Q', '<Nop>', { desc = 'Disable Ex mode (Q)' })
 
 vim.keymap.set('n', '<leader>sr', ':%s///g<Left><Left><Left>', { desc = 'Find and replace in buffer' })
 vim.keymap.set('x', '<leader>sr', ':s///g<Left><Left><Left>', { desc = 'Find and replace in selection' })
@@ -24,10 +25,14 @@ end
 vim.api.nvim_create_user_command('WQ', write_or_prompt_and_quit, {})
 vim.keymap.set('n', 'ZZ', write_or_prompt_and_quit, { silent = true })
 
+-- Centering cursor
 vim.keymap.set('n', '<C-u>', '<C-u>zz', { silent = true })
 vim.keymap.set('n', '<C-d>', '<C-d>zz', { silent = true })
 vim.keymap.set('n', '<C-f>', '<C-f>zz', { silent = true })
 vim.keymap.set('n', '<C-b>', '<C-b>zz', { silent = true })
+
+vim.keymap.set("n", "n", "nzzzv")
+vim.keymap.set("n", "N", "Nzzzv")
 
 vim.keymap.set({ 'n', 'x', 'o' }, 'zk', function()
   require('flash').jump()

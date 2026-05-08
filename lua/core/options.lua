@@ -25,7 +25,6 @@ vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.smartindent = true
 vim.opt.expandtab = true
-vim.opt.hlsearch = false
 vim.opt.incsearch = true
 
 local options_autocmd_group = vim.api.nvim_create_augroup('config-options-autocmds', { clear = true })
