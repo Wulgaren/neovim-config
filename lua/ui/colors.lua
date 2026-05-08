@@ -25,7 +25,7 @@ local function apply_readability_overrides(is_light)
     SignColumn = { bg = 'NONE' },
     EndOfBuffer = { fg = line_nr, bg = 'NONE' },
     LineNr = { fg = line_nr, bg = 'NONE' },
-    CursorLine = { fg = fg, bg = cursorline_bg, bold = true },
+    CursorLine = {  bg = cursorline_bg, bold = true },
     FloatBorder = { fg = border, bg = 'NONE' },
     WinSeparator = { fg = border, bg = 'NONE' },
     Comment = { fg = line_nr, italic = true },
