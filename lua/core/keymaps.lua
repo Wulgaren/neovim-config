@@ -19,7 +19,8 @@ local function write_or_prompt_and_quit()
   else
     vim.cmd('write')
   end
-  vim.cmd('quit')
+  -- Plain :quit errors (E37) if another buffer is still modified; confirm gives prompt.
+  vim.cmd('confirm quit')
 end
 
 vim.api.nvim_create_user_command('WQ', write_or_prompt_and_quit, {})
@@ -44,6 +45,15 @@ vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
 -- Open file explorer
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
+
+vim.api.nvim_create_user_command('MyTips', function()
+  local path = vim.fs.joinpath(vim.fn.stdpath('config'), 'nvim_tips.md')
+  if vim.fn.filereadable(path) == 0 then
+    vim.notify('MyTips: file not found: ' .. path, vim.log.levels.ERROR)
+    return
+  end
+  vim.cmd('belowright split ' .. vim.fn.fnameescape(path))
+end, { desc = 'Open nvim_tips.md below current window' })
 
 -- Git (vim-fugitive)
 vim.keymap.set('n', '<leader>gs', '<cmd>Git<CR>', { silent = true, desc = 'Git status (Fugitive)' })

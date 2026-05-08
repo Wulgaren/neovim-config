@@ -10,12 +10,14 @@ catppuccin.setup({
 
 local function apply_readability_overrides(is_light)
   local fg = is_light and '#3f455e' or '#e8ecff'
+  -- Softer foreground for non-current windows (splits feel less “loud”).
+  local fg_nc = is_light and '#7a8199' or '#a7b0cc'
   local line_nr = is_light and '#525a76' or '#cfd5f2'
   local border = is_light and '#59627f' or '#d7defc'
 
   local groups = {
     Normal = { fg = fg, bg = 'NONE' },
-    NormalNC = { fg = fg, bg = 'NONE' },
+    NormalNC = { fg = fg_nc, bg = 'NONE' },
     NormalFloat = { fg = fg, bg = 'NONE' },
     SignColumn = { bg = 'NONE' },
     EndOfBuffer = { fg = line_nr, bg = 'NONE' },
