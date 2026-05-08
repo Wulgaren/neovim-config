@@ -21,6 +21,7 @@ return {
         'json-lsp',
         'lua-language-server',
         'python-lsp-server',
+        'roslyn',
         'tailwindcss-language-server',
         'taplo',
         'typescript-language-server',
