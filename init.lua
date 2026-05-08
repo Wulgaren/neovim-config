@@ -25,6 +25,6 @@ require('lazy').setup(require('plugins'), {
 
 require('core.options')
 require('core.keymaps')
-require('plugin.telescope')
+require('plugins.telescope')
 require('core.lsp')
 require('ui.colors')
