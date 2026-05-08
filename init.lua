@@ -23,8 +23,8 @@ require('lazy').setup(require('plugins'), {
   rocks = { enabled = false },
 })
 
-require('config.options')
-require('config.keymaps')
-require('config.telescope')
-require('config.lsp')
-require('config.colors')
+require('core.options')
+require('core.keymaps')
+require('plugin.telescope')
+require('core.lsp')
+require('ui.colors')

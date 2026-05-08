@@ -43,6 +43,7 @@ local function space_insensitive_fzy_sorter()
   return telescope_sorters.Sorter:new({
     discard = true,
     scoring_function = function(_, prompt, line, ...)
+      -- Treat spaces in prompt as optional so "my file" matches "myfile".
       local collapsed = (prompt or ''):gsub('%s+', '')
       if collapsed == '' then
         return 1
@@ -110,6 +111,8 @@ local function telescope_live_grep()
   })
 end
 
+local telescope_autocmd_group = vim.api.nvim_create_augroup('config-telescope-autocmds', { clear = true })
+
 vim.keymap.set('n', '<C-p>', telescope_files, { silent = true, desc = 'Telescope find files' })
 vim.keymap.set('n', '<leader>fg', telescope_live_grep, { silent = true, desc = 'Telescope live grep' })
 vim.keymap.set('n', '<C-S-f>', telescope_live_grep, { silent = true, desc = 'Telescope live grep (workspace)' })
@@ -117,6 +120,7 @@ vim.keymap.set('n', '<leader>fb', telescope_builtin.buffers, { silent = true, de
 vim.keymap.set('n', '<leader>fs', telescope_builtin.lsp_document_symbols, { silent = true, desc = 'Telescope LSP document symbols' })
 
 vim.api.nvim_create_autocmd('FileType', {
+  group = telescope_autocmd_group,
   pattern = 'TelescopePrompt',
   callback = function()
     if has_autocomplete_opt then
@@ -126,9 +130,12 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 vim.api.nvim_create_autocmd('User', {
+  group = telescope_autocmd_group,
   pattern = 'TelescopePreviewerLoaded',
   callback = function()
+    -- Preview buffers can contain long lines; keep soft wrapping enabled.
     vim.wo.wrap = true
     vim.wo.linebreak = true
   end,
 })
+
