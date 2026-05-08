@@ -15,6 +15,9 @@ local function apply_readability_overrides(is_light)
   local line_nr = is_light and '#525a76' or '#cfd5f2'
   local border = is_light and '#59627f' or '#d7defc'
 
+  -- Light + frappe: Catppuccin CursorLine is dark; use soft stripe so Normal fg stays readable.
+  local cursorline_bg = is_light and '#e9ecf6' or '#3b3f52'
+
   local groups = {
     Normal = { fg = fg, bg = 'NONE' },
     NormalNC = { fg = fg_nc, bg = 'NONE' },
@@ -22,7 +25,7 @@ local function apply_readability_overrides(is_light)
     SignColumn = { bg = 'NONE' },
     EndOfBuffer = { fg = line_nr, bg = 'NONE' },
     LineNr = { fg = line_nr, bg = 'NONE' },
-    CursorLineNr = { fg = fg, bg = 'NONE', bold = true },
+    CursorLine = { fg = fg, bg = cursorline_bg, bold = true },
     FloatBorder = { fg = border, bg = 'NONE' },
     WinSeparator = { fg = border, bg = 'NONE' },
     Comment = { fg = line_nr, italic = true },
@@ -57,4 +60,3 @@ if vim.o.background == 'light' then
 else
   set_catppuccin_dark()
 end
-
