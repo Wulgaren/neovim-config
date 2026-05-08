@@ -30,7 +30,8 @@
 ## Save & quit
 
 - `ZZ` — write (prompts for path if unnamed) and quit
-- `ZQ` — quit without writing
+- `ZQ` — quit current window without writing
+- `ZX` — quit Neovim without writing everywhere (all windows/tabs; same as `:qa!`; unsaved buffers discarded)
 
 ---
 
@@ -90,7 +91,7 @@ In the quick menu:
 ### Telescope (live grep & pickers)
 
 - `<C-p>` — find files in the project
-- `<Leader>fg` — live grep: in **Normal**, pre-fills the prompt from the **clipboard** (`+`); in **Visual**, from the **selection** (multi-line text is flattened to one line). Many terminals steal `Ctrl+Shift+F`, so this config uses `<Leader>fg` instead.
+- `<Leader>fg / <C-h>` — live grep; in **Visual**, pre-fills the prompt from the **selection** (multi-line text is flattened to one line). **Normal** starts with an empty prompt.
 - `<Leader>fb` — buffers
 - `<Leader>fs` — LSP document symbols (Telescope)
 

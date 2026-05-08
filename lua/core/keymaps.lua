@@ -25,6 +25,10 @@ end
 
 vim.api.nvim_create_user_command('WQ', write_or_prompt_and_quit, {})
 vim.keymap.set('n', 'ZZ', write_or_prompt_and_quit, { silent = true })
+vim.keymap.set('n', 'ZX', '<cmd>qa!<CR>', {
+  silent = true,
+  desc = 'Quit all windows/tabs, discard unsaved buffers (:qa!)',
+})
 
 -- Centering cursor
 vim.keymap.set('n', '<C-u>', '<C-u>zz', { silent = true })
