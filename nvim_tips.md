@@ -14,6 +14,7 @@
 | `,` | same, opposite direction |
 | `R` | Replace mode until `Esc` |
 | `o` | insert on line below |
+| `ggVG` | select all |
 
 ## Change operators
 
