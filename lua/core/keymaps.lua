@@ -1,5 +1,13 @@
 vim.keymap.set('n', '<C-s>', '<cmd>write<CR>', { silent = true })
 vim.keymap.set('i', '<C-s>', '<Esc><cmd>write<CR>a', { silent = true })
+
+--------------------------------------------------------------------------------
+-- Insert only: Opt/Alt + Backspace — delete word before cursor (same as i_CTRL-W).
+-- Terminal must send Meta+Backspace / Meta+Del as chords (e.g. iTerm: Option → Esc+ or Meta).
+--------------------------------------------------------------------------------
+vim.keymap.set('i', '<M-BS>', '<C-W>', { silent = true })
+vim.keymap.set('i', '<M-Del>', '<C-W>', { silent = true })
+
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR><Esc>', { silent = true })
 vim.keymap.set('n', 'Q', '<Nop>', { desc = 'Disable Ex mode (Q)' })
 
