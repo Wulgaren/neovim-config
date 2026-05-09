@@ -5,8 +5,12 @@
 - `gf` — open file under cursor
 - `gx` — open URL under cursor
 - `gd` — go to definition (LSP when available)
+- `Ctrl+^` — switch to alternate buffer (previous file in that pair)
 - `Ctrl+o` / `Ctrl+i` — jump backward / forward in the jump list
-- `f{char}` — find `{char}` forward on the current line
+- `f{char}` / `F{char}` — find `{char}` forward / backward on the current line
+- `;` — repeat the previous `f`, `t`, `F`, or `T`
+- `,` — same, in the opposite direction
+- `R` — Replace mode—overwrite successive characters until `Esc`
 - `o` — insert on the line below
 
 ## Change operators
@@ -15,6 +19,20 @@
 - `ciw` — change inner word
 - `cib` — change inside `()`
 - `ciB` — change inside `{}`
+- `g~` + motion — toggle case (`g~W` — whole WORD)
+- `_` — whole-line - use for d/c/y etc. 
+
+## Undo, redo & repeat last change
+
+- `u` — undo
+- `Ctrl+r` — redo
+- `.` — repeat the last change (`:help .`)
+
+## Indent & `=`
+
+- `>ib` — indent inner `()` block
+- `>at` — indent a “tag block” spanning `<>` (e.g. HTML/XML element)
+- `gg=G` — re-indent the entire buffer (`=` respects filetype/formatting)
 
 ## Search
 
@@ -91,9 +109,32 @@ In the quick menu:
 ### Telescope (live grep & pickers)
 
 - `<C-p>` — find files in the project
-- `<Leader>fg / <C-h>` — live grep; in **Visual**, pre-fills the prompt from the **selection** (multi-line text is flattened to one line). **Normal** starts with an empty prompt.
+- `<Leader>fg / <C-t>` — live grep; in **Visual**, pre-fills the prompt from the **selection** (multi-line text is flattened to one line). **Normal** starts with an empty prompt.
 - `<Leader>fb` — buffers
 - `<Leader>fs` — LSP document symbols (Telescope)
+
+### Harpoon
+
+- `<Leader>a` — add current file to the list
+- `<Ctrl+e>` — toggle quick menu
+- `<Leader>1` … `<Leader>4` — open harpoon slot 1–4
+- `<Leader>hp` / `<Leader>hn` — previous / next harpoon file
+
+### Flash
+
+- `zk` — Flash jump (Normal, Visual, Operator-pending)
+
+### LSP (when a server is attached)
+
+- `gd` — go to definition
+- `gr` — references
+- `K` — hover documentation
+- `<Leader>rn` — rename symbol
+- `<Leader>ca` — code actions
+- `<Leader>f` — format buffer
+
+
+### ---------GIT-----------
 
 ### Git (vim-fugitive)
 
@@ -117,41 +158,31 @@ Open the summary (`:Git` / `:G` with no args) with `<Leader>gs`. In that buffer,
 - `X` — discard the change under the cursor (`checkout` / `clean`; an undo hint is echoed)
 - `=` — toggle inline diff for the file under the cursor
 
-**In the `:Git` status buffer — commit**
-
 - `cc` — create a commit (opens the message buffer; write and quit to finish)
-- `cvc` — commit with `-v` (verbose diff in the template)
-- `ca` — amend the last commit and edit the message
-- `cva` — amend with `-v`
-- `ce` — amend the last commit **without** editing the message
-- `cw` — reword the last commit
-- `c` alone — pre-fill the command line with `:Git commit ` (add flags or a message, then press Enter)
-
-**Push / pull**
 
 - **`P`** (capital **P**) on a commit line in the **Unpushed** section — pre-fills `:Git push` for that commit (you still run it)
 - Any time: **`:Git push`**, **`:Git pull`** (or `:G push`, `:G pull`)
 - `gp` / `gP` — jump to an entry in the Unpushed / Unpulled section (`:h fugitive_gp`)
 
-### Harpoon
 
-- `<Leader>a` — add current file to the list
-- `<Ctrl+e>` — toggle quick menu
-- `<Leader>1` … `<Leader>4` — open harpoon slot 1–4
-- `<Leader>hp` / `<Leader>hn` — previous / next harpoon file
 
-### Flash
+### Git merge tool (`nvimdiff`)
 
-- `zk` — Flash jump (Normal, Visual, Operator-pending)
+When Git runs **nvimdiff** as the merge tool (`merge.tool = nvimdiff`), you usually see **four** buffers: **LOCAL** (current branch / “ours”), **BASE** (common ancestor), **REMOTE** (incoming / “theirs”), and **MERGED** (the file you write and save—this becomes the resolved result).
 
-### LSP (when a server is attached)
+Work in **MERGED**. Put the cursor on a conflicting hunk, then pull text from another version:
 
-- `gd` — go to definition
-- `gr` — references
-- `K` — hover documentation
-- `<Leader>rn` — rename symbol
-- `<Leader>ca` — code actions
-- `<Leader>f` — format buffer
+| Command | Meaning |
+|---------|---------|
+| `:diffg LO` | Take this hunk from **LOCAL** (same as `:diffget LOCAL` if that buffer name matches) |
+| `:diffg RE` | Take from **REMOTE** |
+
+**Opposite direction** (you stand in LOCAL/REMOTE/BASE and push into MERGED): `:diffput MERGED`
+
+**After editing:** write **MERGED** and exit all windows; Git continues the merge from the saved result.
+
+### ---------GIT-----------
+
 
 ### blink.cmp (completion)
 

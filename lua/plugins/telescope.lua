@@ -145,8 +145,8 @@ vim.keymap.set('x', '<leader>fg', telescope_live_grep_visual_selection, {
   silent = true,
   desc = 'Telescope live grep (selection → prompt)',
 })
-vim.keymap.set('n', '<C-h>', telescope_live_grep, { silent = true, desc = 'Telescope live grep' })
-vim.keymap.set('x', '<C-h>', telescope_live_grep_visual_selection, {
+vim.keymap.set('n', '<C-t>', telescope_live_grep, { silent = true, desc = 'Telescope live grep' })
+vim.keymap.set('x', '<C-t>', telescope_live_grep_visual_selection, {
   silent = true,
   desc = 'Telescope live grep (selection → prompt)',
 })

@@ -69,7 +69,53 @@ end, { desc = 'Open nvim_tips.md below current window' })
 
 -- Git (vim-fugitive)
 vim.keymap.set('n', '<leader>gs', '<cmd>Git<CR>', { silent = true, desc = 'Git status (Fugitive)' })
-vim.keymap.set('n', '<leader>gd', '<cmd>Gdiffsplit<CR>', { silent = true, desc = 'Git diff split (Fugitive)' })
+
+--- Vertical diff: if only staged (no unstaged) → :Gvdiffsplit HEAD; if both → pick
+--- HEAD vs all, or index vs working tree; if only unstaged → :Gvdiffsplit (default).
+local function fugitive_smart_vdiff()
+  if vim.fn.FugitiveGitDir() == '' then
+    vim.notify('Fugitive: not in a Git repository buffer', vim.log.levels.WARN)
+    return
+  end
+  local wt = vim.fn.FugitiveWorkTree()
+  local relpath = vim.fn.FugitivePath(vim.fn.expand('%'), ':(top)')
+  if relpath == '' or wt == '' then
+    vim.notify('Fugitive: could not resolve file path in repo', vim.log.levels.WARN)
+    return
+  end
+  local function diff_dirty(cached)
+    local cmd = { 'git', '-C', wt, 'diff', '--quiet' }
+    if cached then
+      table.insert(cmd, '--cached')
+    end
+    vim.list_extend(cmd, { '--', relpath })
+    vim.fn.system(cmd)
+    return vim.v.shell_error ~= 0
+  end
+  local has_unstaged = diff_dirty(false)
+  local has_staged = diff_dirty(true)
+  if has_unstaged and has_staged then
+    vim.ui.select({
+      { label = 'Working tree vs HEAD (all changes)', cmd = 'Gvdiffsplit HEAD' },
+      { label = 'Index vs working tree (staged vs unstaged)', cmd = 'Gvdiffsplit' },
+    }, {
+      prompt = 'Diff this file',
+      format_item = function(item)
+        return item.label
+      end,
+    }, function(item)
+      if item then
+        vim.cmd(item.cmd)
+      end
+    end)
+  elseif has_staged and not has_unstaged then
+    vim.cmd('Gvdiffsplit HEAD')
+  else
+    vim.cmd('Gvdiffsplit')
+  end
+end
+
+vim.keymap.set('n', '<leader>gd', fugitive_smart_vdiff, { silent = true, desc = 'Git vertical diff (smart)' })
 vim.keymap.set('n', '<leader>gb', '<cmd>Git blame<CR>', { silent = true, desc = 'Git blame (Fugitive)' })
 vim.keymap.set('n', '<leader>gl', '<cmd>Git log -- %<CR>', { silent = true, desc = 'Git log current file (Fugitive)' })
 vim.keymap.set('n', '<leader>gB', function()
