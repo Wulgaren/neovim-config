@@ -1,4 +1,11 @@
 return {
+  {
+    'MeanderingProgrammer/render-markdown.nvim',
+    -- Not `ft = markdown`: first buffer can open before attach runs; VeryLazy is cheap.
+    event = 'VeryLazy',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    opts = {},
+  },
   { 'tpope/vim-fugitive' },
   {
     'folke/flash.nvim',
