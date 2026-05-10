@@ -17,6 +17,7 @@
 | `ggVG` | select all |
 | `ge` / `gE` | backward to **end** of `[count]` previous word / WORD (`dge`, `3cge`, …) |
 | `g&` | repeat last `:substitute` on whole buffer (`:help :&`) |
+| `J` | Join **next** line into current |
 
 ## Change operators
 
@@ -115,6 +116,7 @@ Non-focused windows use dimmer **NormalNC** so active split stands out.
 |--------|-----|--------|
 | **Telescope** | `<C-p>` | find files (project) |
 | **Telescope** |  `<C-t>`, `<Leader>fg` | live grep; **Visual** pre-fills from selection (multi-line → one line); **Normal** empty prompt |
+| **Telescope** |  `<C-h>` | list of marks | 
 | **Telescope** | `<Leader>fb` | buffers |
 | **Telescope** | `<Leader>fs` | LSP document symbols |
 | **Harpoon** | `<Leader>a` | add current file |

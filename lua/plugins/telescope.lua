@@ -152,6 +152,7 @@ vim.keymap.set('x', '<C-t>', telescope_live_grep_visual_selection, {
 })
 vim.keymap.set('n', '<leader>fb', telescope_builtin.buffers, { silent = true, desc = 'Telescope buffers' })
 vim.keymap.set('n', '<leader>fs', telescope_builtin.lsp_document_symbols, { silent = true, desc = 'Telescope LSP document symbols' })
+vim.keymap.set('n', '<C-h>', telescope_builtin.marks, { silent = true, desc = 'Telescope marks' })
 
 vim.api.nvim_create_autocmd('FileType', {
   group = telescope_autocmd_group,
