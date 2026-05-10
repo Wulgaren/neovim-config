@@ -110,7 +110,7 @@ Non-focused windows use dimmer **NormalNC** so active split stands out.
 | `:MyTips` | open this file below (`render-markdown` styling like other `.md`) |
 | `:wq` | like `ZZ` (write or prompt, then quit) |
 
-### Navigation & pickers (Telescope, Harpoon, Flash)
+### Navigation & pickers (Telescope, Flash)
 
 | Plugin | Key | Action |
 |--------|-----|--------|
@@ -119,13 +119,8 @@ Non-focused windows use dimmer **NormalNC** so active split stands out.
 | **Telescope** |  `<C-h>` | list of marks | 
 | **Telescope** | `<Leader>fb` | buffers |
 | **Telescope** | `<Leader>fs` | LSP document symbols |
-| **Harpoon** | `<Leader>a` | add current file |
-| **Harpoon** | `<Ctrl+e>` | toggle quick menu |
-| **Harpoon** | `<Leader>1` … `<Leader>4` | open slot 1–4 |
-| **Harpoon** | `<Leader>hp` / `<Leader>hn` | prev / next harpoon file |
 | **Flash** | `zk` | Flash jump (Normal, Visual, Operator-pending) |
 
-In **Harpoon** quick menu (`<Ctrl+e>`): `dd` on a line removes that file; `q` / `Esc` applies and closes.
 
 ### LSP (server attached)
 
@@ -188,7 +183,7 @@ Save **MERGED**, exit windows; Git continues.
 | `<Enter>` | accept |
 | `<Tab>` / `<S-Tab>` | next/prev; snippet fwd/back |
 | `<C-space>` | completion / docs |
-| `<C-e>` | hide (Harpoon `<C-e>` unchanged outside completion) |
+| `<C-e>` | hide |
 
 ### mini.surround (`:h mini-surround`)
 
