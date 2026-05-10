@@ -4,7 +4,7 @@
 
 | Key | Action |
 |-----|--------|
-| `gf` | open file under cursor |
+| `gf` / `gF` | open **file path** under cursor (`gF`: line number suffix if `:line:` form exists) |
 | `gx` | open URL under cursor |
 | `gd` | go to definition (LSP when available) |
 | `Ctrl+^` | alternate buffer |
@@ -15,6 +15,8 @@
 | `R` | Replace mode until `Esc` |
 | `o` | insert on line below |
 | `ggVG` | select all |
+| `ge` / `gE` | backward to **end** of `[count]` previous word / WORD (`dge`, `3cge`, …) |
+| `g&` | repeat last `:substitute` on whole buffer (`:help :&`) |
 
 ## Change operators
 
@@ -47,6 +49,7 @@
 | Key | Action |
 |-----|--------|
 | `*` | search forward for word under cursor |
+| `gn` / `gN` | operate on **next/previous occurrence** (`dgn`, `.`, … ; see **`g*`** block under Motion above) |
 | — | after search: `ciw`, then `n` and `.` to repeat on next matches |
 
 ## Marks
