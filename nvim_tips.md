@@ -132,6 +132,7 @@ Non-focused windows use dimmer **NormalNC** so active split stands out.
 | `<Leader>rn` | rename |
 | `<Leader>ca` | code actions |
 | `<Leader>f` | format buffer |
+| `<Leader>dd` | view inline errors |
 
 ### Git — vim-fugitive
 
@@ -174,6 +175,8 @@ Four buffers: **LOCAL**, **BASE**, **REMOTE**, **MERGED**. Work in **MERGED**.
 | `:diffg RE` | take from REMOTE |
 | `:diffput MERGED` | from LOCAL/REMOTE/BASE → push into MERGED |
 
+`[c / ]c` - to jump between changes.
+
 Save **MERGED**, exit windows; Git continues.
 
 ### blink.cmp
@@ -213,7 +216,7 @@ Prefix **`sa`** add, **`sd`** delete, **`sr`** replace; **`sf`/`sF`** find, **`s
 
 ### mini.bracketed (`:h mini.bracketed`)
 
-After `]` or `[`, second key: **`b`/`B`** buffer, **`q`/`Q`** quickfix, **`c`** comment, **`d`** diagnostic, **`h`** git hunk, etc. e.g. `]b` / `[b`.
+After `]` or `[`, second key picks a target — e.g. **`b`/`B`** buffer, **`m`/`M`** comment block (this config; default upstream is **`c`**), **`q`/`Q`** quickfix, **`d`/`D`** diagnostic, **`x`/`X`** conflict markers, etc. Examples: `]b` / `[b`, `]m` / `[m`.
 
 ### mini.pairs & mini.nvim
 

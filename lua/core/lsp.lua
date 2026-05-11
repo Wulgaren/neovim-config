@@ -163,19 +163,6 @@ do
   end
 end
 
-do
-  -- Keep wrapped diagnostics readable in narrow floating windows.
-  local diagnostic_open_float = vim.diagnostic.open_float
-  vim.diagnostic.open_float = function(opts)
-    local win = diagnostic_open_float(opts)
-    if win and win ~= 0 and vim.api.nvim_win_is_valid(win) then
-      vim.wo[win].wrap = true
-      vim.wo[win].linebreak = true
-    end
-    return win
-  end
-end
-
 local lsp_autocmd_group = vim.api.nvim_create_augroup('config-lsp-autocmds', { clear = true })
 
 vim.api.nvim_create_autocmd('FileType', {
