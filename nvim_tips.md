@@ -156,7 +156,8 @@ Non-focused windows use dimmer **NormalNC** so active split stands out.
 | `-` | toggle stage/unstage |
 | `U` | unstage all |
 | `X` | discard change under cursor |
-| `=` | toggle inline diff |
+| `=` | toggle inline diff — **`=`** again on same line collapses |
+| `dv` / `ds` | vertical / horizontal diff vs index (cursor on file line) |
 | `cc` | commit (edit message buffer; `wq` to finish) |
 
 | Key | Action |
