@@ -132,8 +132,37 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end,
 })
 
+local diag_severity = vim.diagnostic.severity
+
+-- Nerd Font / Font Awesome PUA glyphs (terminal must use a patched font).
+local function d_icon(codepoint)
+  return vim.fn.nr2char(codepoint)
+end
+
 vim.diagnostic.config({
-  virtual_text = true,
+  -- Full message on CursorHold via open_float; keep EOL text short so lines stay readable.
+  virtual_text = {
+    spacing = 2,
+    source = 'if_many',
+    prefix = ' ',
+    format = function(diagnostic)
+      local msg = diagnostic.message:gsub('%s*\n%s*', ' '):gsub('%s+', ' ')
+      local max_len = 72
+      if #msg > max_len then
+        return msg:sub(1, max_len - 1) .. '…'
+      end
+      return msg
+    end,
+  },
+  -- 0.12+ uses extmark sign_text; sign_define() does not apply to these diagnostics.
+  signs = {
+    text = {
+      [diag_severity.ERROR] = d_icon(0xf057),
+      [diag_severity.WARN] = d_icon(0xf071),
+      [diag_severity.INFO] = d_icon(0xf05a),
+      [diag_severity.HINT] = d_icon(0xf7b5),
+    },
+  },
   underline = true,
   severity_sort = true,
   float = { border = 'rounded' },
@@ -155,9 +184,18 @@ do
   if default_pull then
     vim.lsp.handlers['textDocument/diagnostic'] = function(err, result, ctx, config)
       local bufnr = ctx and ctx.bufnr
-      if bufnr and (not vim.api.nvim_buf_is_valid(bufnr) or not vim.api.nvim_buf_is_loaded(bufnr)) then
+      if not bufnr then
         return
       end
+      bufnr = vim._resolve_bufnr(bufnr)
+      if not vim.api.nvim_buf_is_valid(bufnr) or not vim.api.nvim_buf_is_loaded(bufnr) then
+        return
+      end
+      -- Drop stale responses; avoids bufstate nil crash in vim.lsp.diagnostic.on_diagnostic (Nvim 0.12).
+      if vim.tbl_isempty(vim.lsp.get_clients({ bufnr = bufnr, method = 'textDocument/diagnostic' })) then
+        return
+      end
+      vim.lsp.diagnostic._enable(bufnr)
       return default_pull(err, result, ctx, config)
     end
   end
@@ -285,3 +323,25 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
+-- CursorHold: full diagnostic float at cursor (no LSP required if another source sets diagnostics).
+vim.api.nvim_create_autocmd('CursorHold', {
+  group = lsp_autocmd_group,
+  callback = function()
+    local bufnr = vim.api.nvim_get_current_buf()
+    if vim.tbl_isempty(vim.diagnostic.get(bufnr, { lnum = vim.api.nvim_win_get_cursor(0)[1] - 1 })) then
+      return
+    end
+    vim.diagnostic.open_float({ bufnr = bufnr, scope = 'cursor' })
+  end,
+})
+
+-- Optional: other plugins that use :sign with DiagnosticSign* names.
+for type, cp in pairs({
+  Error = 0xf057,
+  Warn = 0xf071,
+  Hint = 0xf7b5,
+  Info = 0xf05a,
+}) do
+  local hl = 'DiagnosticSign' .. type
+  vim.fn.sign_define(hl, { text = d_icon(cp), texthl = hl, numhl = '' })
+end
