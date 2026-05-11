@@ -8,8 +8,15 @@ return {
         ['<CR>'] = { 'accept', 'fallback' },
         ['<Tab>'] = { 'select_next', 'snippet_forward', 'fallback' },
         ['<S-Tab>'] = { 'select_prev', 'snippet_backward', 'fallback' },
-        ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
-        ['<C-e>'] = { 'hide', 'fallback' },
+        --- Toggle completion menu (<C-space> unreliable in many terminals).
+        ['<C-e>'] = {
+          function(cmp)
+            if cmp.is_menu_visible() then
+              return cmp.hide()
+            end
+            return cmp.show()
+          end,
+        },
       },
       appearance = {
         nerd_font_variant = 'mono',

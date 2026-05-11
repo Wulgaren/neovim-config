@@ -186,8 +186,7 @@ Save **MERGED**, exit windows; Git continues.
 |-----|--------|
 | `<Enter>` | accept |
 | `<Tab>` / `<S-Tab>` | next/prev; snippet fwd/back |
-| `<C-space>` | completion / docs |
-| `<C-e>` | hide |
+| `<C-e>` | toggle completion/docs |
 
 ### mini.surround (`:h mini-surround`)
 

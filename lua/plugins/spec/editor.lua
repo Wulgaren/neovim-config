@@ -19,8 +19,7 @@ return {
       require('mini.pairs').setup()
       require('mini.surround').setup()
       require('mini.bracketed').setup({
-        -- Default suffix `c` steals `]c`/`[c`; those are diff next/prev change when `diff` on.
-        comment = { suffix = 'm' },
+        comment = { suffix = '' }, -- disabled (empty suffix = no maps; avoids stealing `[c`/`]c`)
       })
       require('mini.ai').setup()
       require('mini.comment').setup()
