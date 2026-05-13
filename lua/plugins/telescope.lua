@@ -1,5 +1,6 @@
 local has_autocomplete_opt = pcall(vim.api.nvim_get_option_info2, 'autocomplete', {})
 local telescope_ok, telescope = pcall(require, 'telescope')
+local telescope_actions = telescope_ok and require('telescope.actions') or nil
 local telescope_builtin = telescope_ok and require('telescope.builtin') or nil
 local telescope_themes = telescope_ok and require('telescope.themes') or nil
 local telescope_sorters = telescope_ok and require('telescope.sorters') or nil
@@ -73,7 +74,7 @@ telescope.setup({
     },
     mappings = {
       i = {
-        ['<Esc>'] = require('telescope.actions').close,
+        ['<Esc>'] = telescope_actions.close,
       },
     },
   },
@@ -99,6 +100,13 @@ local function telescope_files()
   }))
 end
 
+local function live_grep_select_then_center(prompt_bufnr)
+  telescope_actions.select_default(prompt_bufnr)
+  vim.schedule(function()
+    vim.cmd('normal! zz')
+  end)
+end
+
 local LIVE_GREP_OPTS = {
   cwd = vim.fn.getcwd(),
   layout_strategy = 'vertical',
@@ -106,6 +114,14 @@ local LIVE_GREP_OPTS = {
     height = 0.9,
     prompt_position = 'bottom',
     preview_height = 0.42,
+  },
+  mappings = {
+    i = {
+      ['<CR>'] = live_grep_select_then_center,
+    },
+    n = {
+      ['<CR>'] = live_grep_select_then_center,
+    },
   },
 }
 
