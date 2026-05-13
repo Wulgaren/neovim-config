@@ -110,7 +110,7 @@ Non-focused windows use dimmer **NormalNC** so active split stands out.
 | `:MyTips` | open this file below (`render-markdown` styling like other `.md`) |
 | `:wq` | like `ZZ` (write or prompt, then quit) |
 
-### Navigation & pickers (Telescope, Flash)
+### Telescope
 
 | Plugin | Key | Action |
 |--------|-----|--------|
@@ -119,7 +119,6 @@ Non-focused windows use dimmer **NormalNC** so active split stands out.
 | **Telescope** |  `<C-h>` | list of marks | 
 | **Telescope** | `<Leader>fb` | buffers |
 | **Telescope** | `<Leader>fs` | LSP document symbols |
-| **Flash** | `zk` | Flash jump (Normal, Visual, Operator-pending) |
 
 
 ### LSP (server attached)

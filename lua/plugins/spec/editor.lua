@@ -8,11 +8,6 @@ return {
   },
   { 'tpope/vim-fugitive' },
   {
-    'folke/flash.nvim',
-    event = 'VeryLazy',
-    opts = {},
-  },
-  {
     'echasnovski/mini.nvim',
     version = false,
     config = function()
