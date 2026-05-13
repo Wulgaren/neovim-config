@@ -115,7 +115,7 @@ Non-focused windows use dimmer **NormalNC** so active split stands out.
 | Plugin | Key | Action |
 |--------|-----|--------|
 | **Telescope** | `<C-p>` | find files (project) |
-| **Telescope** |  `<C-t>`, `<Leader>fg` | live grep; **Visual** pre-fills from selection (multi-line → one line); **Normal** empty prompt |
+| **Telescope** |  `<C-t>`, `<Leader>fg` | live grep (empty prompt) |
 | **Telescope** |  `<C-h>` | list of marks | 
 | **Telescope** | `<Leader>fb` | buffers |
 | **Telescope** | `<Leader>fs` | LSP document symbols |

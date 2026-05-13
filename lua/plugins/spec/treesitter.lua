@@ -21,6 +21,7 @@ return {
         'python',
         'query',
         'toml',
+        'tsx',
         'typescript',
         'vim',
         'vimdoc',

@@ -120,36 +120,15 @@ local function telescope_live_grep_opts(extra)
   return opts
 end
 
--- Telescope prompt is a buffer line; newlines in default_text break nvim_buf_set_lines.
-local function prompt_safe_text(raw)
-  local s = raw or ''
-  s = s:gsub('[\n\r\v\f]+', ' ')
-  s = s:gsub('%s+', ' ')
-  return s:match('^%s*(.-)%s*$') or ''
-end
-
 local function telescope_live_grep()
   telescope_builtin.live_grep(telescope_live_grep_opts({}))
-end
-
-local function telescope_live_grep_visual_selection()
-  vim.cmd([[noautocmd silent normal! gv"zy]])
-  telescope_builtin.live_grep(telescope_live_grep_opts({ default_text = prompt_safe_text(vim.fn.getreg('z')) }))
 end
 
 local telescope_autocmd_group = vim.api.nvim_create_augroup('config-telescope-autocmds', { clear = true })
 
 vim.keymap.set('n', '<C-p>', telescope_files, { silent = true, desc = 'Telescope find files' })
 vim.keymap.set('n', '<leader>fg', telescope_live_grep, { silent = true, desc = 'Telescope live grep' })
-vim.keymap.set('x', '<leader>fg', telescope_live_grep_visual_selection, {
-  silent = true,
-  desc = 'Telescope live grep (selection → prompt)',
-})
 vim.keymap.set('n', '<C-t>', telescope_live_grep, { silent = true, desc = 'Telescope live grep' })
-vim.keymap.set('x', '<C-t>', telescope_live_grep_visual_selection, {
-  silent = true,
-  desc = 'Telescope live grep (selection → prompt)',
-})
 vim.keymap.set('n', '<leader>fb', telescope_builtin.buffers, { silent = true, desc = 'Telescope buffers' })
 vim.keymap.set('n', '<leader>fs', telescope_builtin.lsp_document_symbols, { silent = true, desc = 'Telescope LSP document symbols' })
 vim.keymap.set('n', '<C-h>', telescope_builtin.marks, { silent = true, desc = 'Telescope marks' })
