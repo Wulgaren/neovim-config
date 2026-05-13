@@ -80,7 +80,7 @@ telescope.setup({
   pickers = {
     live_grep = {
       additional_args = function()
-        local args = { '-i' }
+        local args = { '-i', '--fixed-strings' }
         vim.list_extend(args, telescope_rg_glob_cli_args())
         return args
       end,
