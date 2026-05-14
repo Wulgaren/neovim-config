@@ -1,4 +1,5 @@
 local has_autocomplete_opt = pcall(vim.api.nvim_get_option_info2, 'autocomplete', {})
+local platform = require('core.platform')
 
 vim.opt.termguicolors = true
 vim.opt.number = true
@@ -26,6 +27,28 @@ vim.opt.shiftwidth = 4
 vim.opt.smartindent = true
 vim.opt.expandtab = true
 vim.opt.incsearch = true
+
+-- Windows: CRLF files mis-read as unix show trailing ^M. Prefer dos; re-read if first lines contain CR.
+if platform.is_windows then
+  vim.opt.fileformats = { 'dos', 'unix', 'mac' }
+
+  vim.api.nvim_create_autocmd('BufReadPost', {
+    group = vim.api.nvim_create_augroup('config-windows-crlf', { clear = true }),
+    callback = function()
+      if vim.bo.fileformat ~= 'unix' or vim.bo.binary or vim.bo.buftype ~= '' then
+        return
+      end
+      local last = math.min(50, vim.api.nvim_buf_line_count(0)) - 1
+      for i = 0, math.max(last, 0) do
+        local line = vim.api.nvim_buf_get_lines(0, i, i + 1, false)[1]
+        if line and line:find('\r', 1, true) then
+          vim.cmd('noautocmd silent edit ++ff=dos')
+          return
+        end
+      end
+    end,
+  })
+end
 
 local options_autocmd_group = vim.api.nvim_create_augroup('config-options-autocmds', { clear = true })
 
