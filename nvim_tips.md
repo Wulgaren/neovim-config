@@ -18,6 +18,10 @@
 | `ge` / `gE` | backward to **end** of `[count]` previous word / WORD (`dge`, `3cge`, …) |
 | `g&` | repeat last `:substitute` on whole buffer (`:help :&`) |
 | `J` | Join **next** line into current |
+| `C-o` | Add "enter" in Insert Mode|
+| `C-u / C-d` | Move up/down by half a page |
+| `/ or ?` | Search forwards/backwards |
+
 
 ## Change operators
 
@@ -50,6 +54,7 @@
 | Key | Action |
 |-----|--------|
 | `*` | search forward for word under cursor |
+| `g*` | search forward for word under cursor (includes when word is part of other word) |
 | `gn` / `gN` | operate on **next/previous occurrence** (`dgn`, `.`, … ; see **`g*`** block under Motion above) |
 | — | after search: `ciw`, then `n` and `.` to repeat on next matches |
 

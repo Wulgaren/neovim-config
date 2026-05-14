@@ -13,6 +13,8 @@ local function apply_readability_overrides(is_light)
   -- Softer foreground for non-current windows (splits feel less “loud”).
   local fg_nc = is_light and '#7a8199' or '#a7b0cc'
   local line_nr = is_light and '#525a76' or '#cfd5f2'
+  -- Comments: don’t reuse line_nr in dark (too bright); use Frappe overlay0-ish gray.
+  local comment_fg = is_light and line_nr or '#737994'
   local border = is_light and '#59627f' or '#d7defc'
 
   -- Light + frappe: Catppuccin CursorLine is dark; use soft stripe so Normal fg stays readable.
@@ -28,7 +30,7 @@ local function apply_readability_overrides(is_light)
     CursorLine = {  bg = cursorline_bg, bold = true },
     FloatBorder = { fg = border, bg = 'NONE' },
     WinSeparator = { fg = border, bg = 'NONE' },
-    Comment = { fg = line_nr, italic = true },
+    Comment = { fg = comment_fg, italic = true },
     NonText = { fg = line_nr },
     Whitespace = { fg = line_nr },
   }

@@ -100,13 +100,6 @@ local function telescope_files()
   }))
 end
 
-local function live_grep_select_then_center(prompt_bufnr)
-  telescope_actions.select_default(prompt_bufnr)
-  vim.schedule(function()
-    vim.cmd('normal! zz')
-  end)
-end
-
 local LIVE_GREP_OPTS = {
   cwd = vim.fn.getcwd(),
   layout_strategy = 'vertical',
@@ -117,10 +110,10 @@ local LIVE_GREP_OPTS = {
   },
   mappings = {
     i = {
-      ['<CR>'] = live_grep_select_then_center,
+      ['<CR>'] = telescope_actions.select_default + telescope_actions.center,
     },
     n = {
-      ['<CR>'] = live_grep_select_then_center,
+      ['<CR>'] = telescope_actions.select_default + telescope_actions.center,
     },
   },
 }
