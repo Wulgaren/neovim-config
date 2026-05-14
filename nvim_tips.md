@@ -99,6 +99,7 @@ Non-focused windows use dimmer **NormalNC** so active split stands out.
 | `<Leader>p` | Visual: paste without overwritting default register |
 | `<Leader>d` | delete without overwritting default register |
 | `<Leader>pv` | built-in explorer (`Ex`) |
+| `<Leader>ko` | **NeoCodeium** toggle on/off (`:NeoCodeium toggle` — completions only; no server stop) |
 | `<C-u>` / `<C-d>` / `<C-f>` / `<C-b>` | scroll, cursor centered |
 | `n` / `N` | next/prev match, cursor centered |
 | Visual `J` / `K` | move selection down/up |
@@ -188,9 +189,21 @@ Save **MERGED**, exit windows; Git continues.
 
 | Key | Action |
 |-----|--------|
-| `<Enter>` | accept |
-| `<Tab>` / `<S-Tab>` | next/prev; snippet fwd/back |
-| `<C-e>` | toggle completion/docs |
+| `<Enter>` | if **NeoCodeium** suggestion visible **and blink is inactive** (<kbd>Ctrl+e</kbd> menu off, blink ghost/menu hidden) → **accept line**; else accept blink item / newline fallback |
+| `<Tab>` | if **NeoCodeium** ghost suggestion visible → **accept word**; else next item / snippet fwd / Vim tab |
+| `<S-Tab>` | prev item; snippet back |
+| `<C-e>` | toggle blink menu/docs (NeoCodeium comes back after you close blink and edit) |
+
+### NeoCodeium (`:NeoCodeium auth`)
+
+Windsurf-powered inline suggestions beside **blink**.
+
+| Key | Action |
+|-----|--------|
+| `<Leader>ko` | same as `:NeoCodeium toggle` (add **`!`** to stop the Windsurf server) |
+| `<Tab> / <Alt-w>` | accept word **when suggestion visible** (same as Alt-w); otherwise behaves like blink `<Tab>` |
+| `<Enter> / <Alt-l>` | accept **line** when Neo shows a suggestion **and blink is inactive** ; same outcome as **`Alt+l`** |
+
 
 ### mini.surround (`:h mini-surround`)
 
