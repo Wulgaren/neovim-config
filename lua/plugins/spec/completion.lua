@@ -5,10 +5,10 @@ return {
     opts = {
       keymap = {
         preset = 'none',
-        --- Tab/Enter: blink only; NeoCodeium uses `<M-f>` / `<M-w>` / `<M-l>` (see neocodeium spec).
+        --- Arrows: blink menu/snippet nav (was Tab / S-Tab). Tab reserved for NeoCodeium accept-word.
         ['<CR>'] = { 'accept', 'fallback' },
-        ['<Tab>'] = { 'select_next', 'snippet_forward', 'fallback' },
-        ['<S-Tab>'] = { 'select_prev', 'snippet_backward', 'fallback' },
+        ['<Down>'] = { 'select_next', 'snippet_forward', 'fallback' },
+        ['<Up>'] = { 'select_prev', 'snippet_backward', 'fallback' },
         --- Toggle completion menu (<C-space> unreliable in many terminals).
         ['<C-e>'] = {
           function(cmp)
@@ -55,9 +55,17 @@ return {
         silent = true,
         desc = 'NeoCodeium toggle (no bang; use :NeoCodeium! toggle to halt server)',
       })
-      vim.keymap.set('i', '<M-f>', neocodeium.accept, { silent = true, desc = 'NeoCodeium: accept' })
+      --- Full suggestion accept (`accept`, not word). `<M-Tab>` = Alt+Tab; OS may capture it before Neovim.
+      vim.keymap.set('i', '<M-Tab>', neocodeium.accept, { silent = true, desc = 'NeoCodeium: accept all' })
       vim.keymap.set('i', '<M-w>', neocodeium.accept_word, { silent = true, desc = 'NeoCodeium: accept word' })
       vim.keymap.set('i', '<M-l>', neocodeium.accept_line, { silent = true, desc = 'NeoCodeium: accept line' })
+      vim.keymap.set('i', '<Tab>', function()
+        if neocodeium.visible() then
+          neocodeium.accept_word()
+        else
+          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Tab>', true, false, true), 'n', true)
+        end
+      end, { silent = true, desc = 'NeoCodeium: accept word, else insert Tab' })
     end,
   },
 }

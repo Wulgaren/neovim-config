@@ -21,6 +21,7 @@
 | `C-o` | Add "enter" in Insert Mode|
 | `C-u / C-d` | Move up/down by half a page |
 | `/ or ?` | Search forwards/backwards |
+| `<C-v> then <I/A>` | Visual **block** mode then insert |
 
 
 ## Change operators
@@ -137,7 +138,7 @@ Non-focused windows use dimmer **NormalNC** so active split stands out.
 | `<Leader>rn` | rename |
 | `<Leader>ca` | code actions |
 | `<Leader>f` | format buffer |
-| `<Leader>dd` | view inline errors |
+| `<Leader>dd` | view inline errors (use :q to quit out of the Diagnostic window) |
 
 ### Git — vim-fugitive
 
@@ -185,22 +186,22 @@ Four buffers: **LOCAL**, **BASE**, **REMOTE**, **MERGED**. Work in **MERGED**.
 
 Save **MERGED**, exit windows; Git continues.
 
-### blink.cmp
+### blink.cmp & NeoCodeium
 
 | Key | Action |
 |-----|--------|
-| `<Enter>` | accept blink item / newline fallback |
-| `<Tab>` | next item; snippet fwd; else Vim tab |
-| `<S-Tab>` | prev item; snippet back |
-| `<C-e>` | toggle blink menu/docs |
+| `<Enter>` | accept completion item, else newline |
+| `<Down>` / `<Up>` | next/prev item; snippet forward/back; fallback (same roles **Tab** / **Shift+Tab** used to have) |
+| `<C-e>` | show or hide completion menu (and documentation) |
 
-Completion menu **auto-opens while typing** when there are matches (you can still hide/show with `<C-e>`).
+**NeoCodeium** (ghost-text AI)
 
 | Key | Action |
 |-----|--------|
-| `<Leader>ko` | same as `:NeoCodeium toggle` (add **`!`** to stop the Windsurf server) |
-| `<Alt-w>` | accept word |
-| `<Alt-l>` | accept line |
+| `<Leader>ko` | toggle (`:NeoCodeium toggle`; add **`!`** → `:NeoCodeium! toggle` to stop Windsurf server) |
+| `<M-Tab>` (Alt+Tab) | accept **full** suggestion | 
+| `<M-w> / <Tab>` | accept word |
+| `<M-l>` | accept line |
 
 
 ### mini.surround (`:h mini-surround`)
