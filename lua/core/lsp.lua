@@ -1,7 +1,7 @@
 local platform = require('core.platform')
 local is_windows = platform.is_windows
 local mason_bin = platform.join_path(vim.fn.stdpath('data'), 'mason', 'bin')
-local lsp_bin = is_windows and platform.editor_lsp_bin_dir() or platform.bun_bin_dir()
+local lsp_bin = is_windows and platform.editor_lsp_bin_dir()
 local tailwind_markers = { 'tailwind.config.js', 'tailwind.config.cjs', 'tailwind.config.ts', 'package.json', '.git' }
 
 local function join_path(...)
