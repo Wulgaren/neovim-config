@@ -16,8 +16,11 @@ function M.appdata_dir()
 end
 
 function M.editor_lsp_bin_dir()
-  -- Windows: custom install path for language servers.
-  return M.appdata_dir() .. '\\editor-lsp\\bin'
+  -- Optional manual install dir (not Mason); always a string so callers may join safely.
+  if M.is_windows then
+    return M.appdata_dir() .. '\\editor-lsp\\bin'
+  end
+  return M.join_path(M.home_dir(), '.local', 'share', 'editor-lsp', 'bin')
 end
 
 return M
