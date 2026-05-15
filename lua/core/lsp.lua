@@ -1,11 +1,26 @@
 local platform = require('core.platform')
 local is_windows = platform.is_windows
 local mason_bin = platform.join_path(vim.fn.stdpath('data'), 'mason', 'bin')
-local lsp_bin = is_windows and platform.editor_lsp_bin_dir()
+-- On Unix `is_windows and ...` is boolean false; must be nil so join_path never sees false.
+local lsp_bin = is_windows and platform.editor_lsp_bin_dir() or nil
 local tailwind_markers = { 'tailwind.config.js', 'tailwind.config.cjs', 'tailwind.config.ts', 'package.json', '.git' }
 
 local function join_path(...)
-  return platform.join_path(...)
+  local segments = {}
+  for i = 1, select('#', ...) do
+    local part = select(i, ...)
+    if part then
+      segments[#segments + 1] = part
+    end
+  end
+  if #segments == 0 then
+    return platform.join_path()
+  end
+  local acc = segments[1]
+  for i = 2, #segments do
+    acc = platform.join_path(acc, segments[i])
+  end
+  return acc
 end
 
 local function command_exists(cmd)

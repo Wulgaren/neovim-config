@@ -189,20 +189,18 @@ Save **MERGED**, exit windows; Git continues.
 
 | Key | Action |
 |-----|--------|
-| `<Enter>` | if **NeoCodeium** suggestion visible **and blink is inactive** (<kbd>Ctrl+e</kbd> menu off, blink ghost/menu hidden) → **accept line**; else accept blink item / newline fallback |
-| `<Tab>` | if **NeoCodeium** ghost suggestion visible → **accept word**; else next item / snippet fwd / Vim tab |
+| `<Enter>` | accept blink item / newline fallback |
+| `<Tab>` | next item; snippet fwd; else Vim tab |
 | `<S-Tab>` | prev item; snippet back |
-| `<C-e>` | toggle blink menu/docs (NeoCodeium comes back after you close blink and edit) |
+| `<C-e>` | toggle blink menu/docs |
 
-### NeoCodeium (`:NeoCodeium auth`)
-
-Windsurf-powered inline suggestions beside **blink**.
+Completion menu **auto-opens while typing** when there are matches (you can still hide/show with `<C-e>`).
 
 | Key | Action |
 |-----|--------|
 | `<Leader>ko` | same as `:NeoCodeium toggle` (add **`!`** to stop the Windsurf server) |
-| `<Tab> / <Alt-w>` | accept word **when suggestion visible** (same as Alt-w); otherwise behaves like blink `<Tab>` |
-| `<Enter> / <Alt-l>` | accept **line** when Neo shows a suggestion **and blink is inactive** ; same outcome as **`Alt+l`** |
+| `<Alt-w>` | accept word |
+| `<Alt-l>` | accept line |
 
 
 ### mini.surround (`:h mini-surround`)
