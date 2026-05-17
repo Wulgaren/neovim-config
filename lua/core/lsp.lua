@@ -118,6 +118,48 @@ local function lua_lsp_cmd()
   })
 end
 
+local function go_lsp_cmd()
+  if is_windows then
+    return first_available_command({
+      { mason_bin .. '\\gopls.cmd' },
+      { mason_bin .. '\\gopls.EXE' },
+      { lsp_bin .. '\\gopls.cmd' },
+      { lsp_bin .. '\\gopls.EXE' },
+      { 'gopls' },
+    })
+  end
+  return first_available_command({
+    { join_path(mason_bin, 'gopls') },
+    { join_path(lsp_bin, 'gopls') },
+    { 'gopls' },
+  })
+end
+
+-- sourcekit-lsp ships with Xcode / Swift toolchain (not in Mason). Optional manual symlinks in mason_bin / lsp_bin.
+local function swift_lsp_cmd()
+  if is_windows then
+    return first_available_command({
+      { join_path(mason_bin, 'sourcekit-lsp') },
+      { join_path(lsp_bin, 'sourcekit-lsp') },
+      { 'sourcekit-lsp' },
+    })
+  end
+  local candidates = {
+    { join_path(mason_bin, 'sourcekit-lsp') },
+    { join_path(lsp_bin, 'sourcekit-lsp') },
+  }
+  if vim.fn.has('mac') == 1 then
+    table.insert(candidates, {
+      '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp',
+    })
+    table.insert(candidates, {
+      '/Library/Developer/CommandLineTools/usr/bin/sourcekit-lsp',
+    })
+  end
+  table.insert(candidates, { 'sourcekit-lsp' })
+  return first_available_command(candidates)
+end
+
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
     local opts = { buffer = args.buf, silent = true }
@@ -140,7 +182,7 @@ local function d_icon(codepoint)
 end
 
 vim.diagnostic.config({
-  -- Full message on CursorHold via open_float; keep EOL text short so lines stay readable.
+  -- Truncate EOL virtual_text so lines stay readable; full text via `<leader>dd` open_float.
   virtual_text = {
     spacing = 2,
     source = 'if_many',
@@ -305,6 +347,22 @@ vim.api.nvim_create_autocmd('FileType', {
 
 vim.api.nvim_create_autocmd('FileType', {
   group = lsp_autocmd_group,
+  pattern = { 'go' },
+  callback = function(args)
+    start_lsp(args.buf, 'gopls', go_lsp_cmd(), { 'go.mod', 'go.work', '.git' })
+  end,
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  group = lsp_autocmd_group,
+  pattern = { 'swift' },
+  callback = function(args)
+    start_lsp(args.buf, 'sourcekit', swift_lsp_cmd(), { 'Package.swift', '.git' })
+  end,
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  group = lsp_autocmd_group,
   pattern = { 'lua' },
   callback = function(args)
     start_lsp(args.buf, 'lua_ls', lua_lsp_cmd(), { '.luarc.json', '.luarc.jsonc', '.git' }, {
@@ -320,18 +378,6 @@ vim.api.nvim_create_autocmd('FileType', {
         },
       },
     })
-  end,
-})
-
--- CursorHold: full diagnostic float at cursor (no LSP required if another source sets diagnostics).
-vim.api.nvim_create_autocmd('CursorHold', {
-  group = lsp_autocmd_group,
-  callback = function()
-    local bufnr = vim.api.nvim_get_current_buf()
-    if vim.tbl_isempty(vim.diagnostic.get(bufnr, { lnum = vim.api.nvim_win_get_cursor(0)[1] - 1 })) then
-      return
-    end
-    vim.diagnostic.open_float({ bufnr = bufnr, scope = 'cursor' })
   end,
 })
 

@@ -17,6 +17,7 @@ return {
       ensure_installed = {
         'bash-language-server',
         'css-lsp',
+        'gopls',
         'html-lsp',
         'json-lsp',
         'lua-language-server',

@@ -126,4 +126,6 @@ end, { silent = true, desc = 'Git log current line (Fugitive)' })
 -- reindent paragraph without losing spot
 vim.keymap.set("n", "=ap", "ma=ap'a")
 
-vim.keymap.set('n', "<leader>dd", "<cmd> lua vim.diagnostic.open_float() <CR>", { silent = true, desc = "Toggles local troubleshoot" })
+vim.keymap.set('n', '<leader>dd', function()
+  vim.diagnostic.open_float({ scope = 'line', focus = false })
+end, { silent = true, desc = 'Diagnostic details (float, keep focus)' })

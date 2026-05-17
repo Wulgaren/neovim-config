@@ -20,12 +20,14 @@ return {
         'markdown_inline',
         'python',
         'query',
+        'swift',
         'toml',
         'tsx',
         'typescript',
         'vim',
         'vimdoc',
         'yaml',
+        'go'
       })
     end,
   },

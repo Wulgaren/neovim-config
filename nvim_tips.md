@@ -10,8 +10,8 @@
 | `Ctrl+^` | alternate buffer |
 | `Ctrl+o` / `Ctrl+i` | jump backward / forward (jump list) |
 | `f{char}` / `F{char}` | find char forward / backward on line |
-| `;` | repeat previous `f`/`t`/`F`/`T` |
-| `,` | same, opposite direction |
+| `;` / `,` | repeat previous `f`/`t`/`F`/`T` |
+| `^` / `$` | Start/end of line |
 | `R` | Replace mode until `Esc` |
 | `o` | insert on line below |
 | `ggVG` | select all |
@@ -233,7 +233,3 @@ Prefix **`sa`** add, **`sd`** delete, **`sr`** replace; **`sf`/`sF`** find, **`s
 ### mini.bracketed (`:h mini.bracketed`)
 
 After `]` or `[`, second key picks a target — e.g. **`b`/`B`** buffer, **`m`/`M`** comment block (this config; default upstream is **`c`**), **`q`/`Q`** quickfix, **`d`/`D`** diagnostic, **`x`/`X`** conflict markers, etc. Examples: `]b` / `[b`, `]m` / `[m`.
-
-### mini.pairs & mini.nvim
-
-**mini.pairs** — auto close (`:h mini.pairs`). Library: **`:h mini.nvim`**.

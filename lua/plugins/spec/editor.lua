@@ -11,7 +11,6 @@ return {
     'echasnovski/mini.nvim',
     version = false,
     config = function()
-      require('mini.pairs').setup()
       require('mini.surround').setup()
       require('mini.bracketed').setup({
         comment = { suffix = '' }, -- disabled (empty suffix = no maps; avoids stealing `[c`/`]c`)
