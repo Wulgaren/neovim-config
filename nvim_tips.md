@@ -183,6 +183,7 @@ Four buffers: **LOCAL**, **BASE**, **REMOTE**, **MERGED**. Work in **MERGED**.
 | `:diffput MERGED` | from LOCAL/REMOTE/BASE → push into MERGED |
 
 `[c / ]c` - to jump between changes.
+`[x / ]x` - to jump between merge conflicts.
 
 Save **MERGED**, exit windows; Git continues.
 
@@ -232,4 +233,4 @@ Prefix **`sa`** add, **`sd`** delete, **`sr`** replace; **`sf`/`sF`** find, **`s
 
 ### mini.bracketed (`:h mini.bracketed`)
 
-After `]` or `[`, second key picks a target — e.g. **`b`/`B`** buffer, **`m`/`M`** comment block (this config; default upstream is **`c`**), **`q`/`Q`** quickfix, **`d`/`D`** diagnostic, **`x`/`X`** conflict markers, etc. Examples: `]b` / `[b`, `]m` / `[m`.
+After `]` or `[`, second key picks a target — e.g. **`b`/`B`** buffer, **`m`/`M`** comment block (this config; default upstream is **`c`**), **`q`/`Q`** quickfix, **`d`/`D`** all diagnostics, **`e`/`E`** errors only, **`x`/`X`** conflict markers, etc. Examples: `]b` / `[b`, `]m` / `[m`, `]e` / `[e`.
