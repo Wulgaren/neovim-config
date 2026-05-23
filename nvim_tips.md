@@ -185,7 +185,8 @@ Four buffers: **LOCAL**, **BASE**, **REMOTE**, **MERGED**. Work in **MERGED**.
 `[c / ]c` - to jump between changes.
 `[x / ]x` - to jump between merge conflicts.
 
-Save **MERGED**, exit windows; Git continues.
+Save **MERGED**, exit windows using `:qa`; Git continues.
+Or abort by using `:cq`.
 
 ### blink.cmp & NeoCodeium
 
