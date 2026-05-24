@@ -20,8 +20,10 @@
 | `J` | Join **next** line into current |
 | `C-o` | Add "enter" in Insert Mode|
 | `C-u / C-d` | Move up/down by half a page |
+| `{ / }` | Move by paragraphs |
 | `/ or ?` | Search forwards/backwards |
 | `<C-v> then <I/A>` | Visual **block** mode then insert |
+| `gi` | Insert in the last place you edited |
 
 
 ## Change operators
