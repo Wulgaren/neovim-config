@@ -5,7 +5,7 @@ vim.opt.termguicolors = true
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.cursorline = true
-vim.opt.mouse = 'a'
+vim.opt.mouse = ''
 vim.opt.clipboard = 'unnamedplus'
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
@@ -27,6 +27,7 @@ vim.opt.shiftwidth = 8
 vim.opt.smartindent = true
 vim.opt.expandtab = true
 vim.opt.incsearch = true
+vim.opt.wrap = false
 
 -- Windows: CRLF files mis-read as unix show trailing ^M. Prefer dos; re-read if first lines contain CR.
 if platform.is_windows then

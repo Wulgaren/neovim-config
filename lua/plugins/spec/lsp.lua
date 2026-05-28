@@ -21,6 +21,7 @@ return {
         'html-lsp',
         'json-lsp',
         'lua-language-server',
+        'omnisharp',
         'python-lsp-server',
         'roslyn',
         'tailwindcss-language-server',

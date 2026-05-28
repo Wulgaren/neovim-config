@@ -15,6 +15,8 @@ vim.keymap.set('n', '<leader>sr', ':%s///g<Left><Left><Left>', { desc = 'Find an
 vim.keymap.set('x', '<leader>sr', ':s///g<Left><Left><Left>', { desc = 'Find and replace in selection' })
 vim.keymap.set('x', '<leader>p', [["_dP]], { desc = 'Paste without yanking replaced text' })
 vim.keymap.set({ "n", "v" }, "<leader>d", "\"_d", { desc = 'Delete without yanking replaced text' })
+vim.keymap.set('n', ']<space>', 'mzo<esc>`z', { silent = true, desc = "Insert new line after cursor" })
+vim.keymap.set('n', '[<space>', 'mzO<esc>`z', { silent = true, desc = "Insert new line before cursor" })
 
 local function write_or_prompt_and_quit()
   -- Mirror Vim's ZZ flow, but handle unnamed buffers by prompting for filename.

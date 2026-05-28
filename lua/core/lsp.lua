@@ -26,6 +26,28 @@ local function root_dir(bufnr, markers)
   return vim.fs.root(path, markers) or vim.fn.getcwd()
 end
 
+-- vim.fs.root does not match globs like *.sln; OmniSharp needs solution/project roots.
+local function dotnet_root_dir(bufnr)
+  local path = vim.api.nvim_buf_get_name(bufnr)
+  if path == '' then
+    return vim.fn.getcwd()
+  end
+  for _, pattern in ipairs({ '*.sln', '*.slnx', '*.vbproj', 'omnisharp.json', '.git' }) do
+    local found = vim.fs.find(pattern, { path = path, upward = true })[1]
+    if found then
+      return vim.fs.dirname(found)
+    end
+  end
+  return vim.fn.getcwd()
+end
+
+-- OmniSharp occasionally sends JSON null; Neovim 0.12 reports INVALID_SERVER_MESSAGE (harmless).
+local function omnisharp_on_error(code, err)
+  if code == vim.lsp.rpc.client_errors.INVALID_SERVER_MESSAGE and err == vim.NIL then
+    return
+  end
+end
+
 local function start_lsp(bufnr, name, cmd, markers, opts)
   if not cmd or not command_exists(cmd[1]) then
     return
@@ -115,6 +137,40 @@ local function lua_lsp_cmd()
     { join_path(mason_bin, 'lua-language-server') },
     { join_path(lsp_bin, 'lua-language-server') },
     { 'lua-language-server' },
+  })
+end
+
+local omnisharp_dll = join_path(vim.fn.stdpath('data'), 'mason', 'packages', 'omnisharp', 'libexec', 'OmniSharp.dll')
+
+local function omnisharp_lsp_cmd()
+  local lsp_args = {
+    '-z',
+    '--hostPID',
+    tostring(vim.fn.getpid()),
+    'DotNet:enablePackageRestore=false',
+    '--encoding',
+    'utf-8',
+    '--languageserver',
+  }
+  local function cmd(...)
+    return vim.list_extend({ ... }, lsp_args)
+  end
+  if is_windows then
+    return first_available_command({
+      cmd(mason_bin .. '\\OmniSharp.cmd'),
+      cmd(mason_bin .. '\\OmniSharp.EXE'),
+      cmd(mason_bin .. '\\omnisharp.cmd'),
+      cmd('dotnet', omnisharp_dll),
+      cmd('OmniSharp'),
+      cmd('omnisharp'),
+    })
+  end
+  return first_available_command({
+    cmd(join_path(mason_bin, 'OmniSharp')),
+    cmd(join_path(mason_bin, 'omnisharp')),
+    cmd('dotnet', omnisharp_dll),
+    cmd('OmniSharp'),
+    cmd('omnisharp'),
   })
 end
 
@@ -272,8 +328,8 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
--- C# LSP handled by roslyn.nvim plugin (see lua/plugins/init.lua).
--- Legacy csharp-ls autocmd removed in favor of roslyn_ls.
+-- C# LSP handled by roslyn.nvim plugin (see lua/plugins/spec/lsp.lua).
+-- VB.NET uses OmniSharp only (FileType vb below); do not attach OmniSharp to cs.
 
 vim.api.nvim_create_autocmd('FileType', {
   group = lsp_autocmd_group,
@@ -357,7 +413,24 @@ vim.api.nvim_create_autocmd('FileType', {
   group = lsp_autocmd_group,
   pattern = { 'swift' },
   callback = function(args)
-    start_lsp(args.buf, 'sourcekit', swift_lsp_cmd(), { 'Package.swift', '.git' })
+    start_lsp(args.buf, 'sourcekit', swift_lsp_cmd(), { 'Package.swift', '*.xcodeproj', '.git' })
+  end,
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  group = lsp_autocmd_group,
+  pattern = { 'vb' },
+  callback = function(args)
+    start_lsp(args.buf, 'omnisharp', omnisharp_lsp_cmd(), {}, {
+      root_dir = dotnet_root_dir(args.buf),
+      on_error = omnisharp_on_error,
+      capabilities = {
+        workspace = { workspaceFolders = false },
+      },
+      settings = {
+        FormattingOptions = { EnableEditorConfigSupport = true },
+      },
+    })
   end,
 })
 
