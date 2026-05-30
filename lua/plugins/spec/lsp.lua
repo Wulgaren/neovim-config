@@ -21,7 +21,6 @@ return {
         'html-lsp',
         'json-lsp',
         'lua-language-server',
-        'omnisharp',
         'python-lsp-server',
         'roslyn',
         'tailwindcss-language-server',
@@ -34,36 +33,5 @@ return {
       auto_update = false,
     },
   },
-    {
-        'seblyng/roslyn.nvim',
-        ft = { 'cs', 'razor' },
-        dependencies = { 'mason-org/mason.nvim' },
-        config = function()
-            require('roslyn').setup({
-                extensions = {
-                    razor = { enabled = false },
-                },
-                broad_search = false,
-                lock_target = true,
-                -- choose_target receives *solution* paths (.sln / .slnx / .slnf), not .csproj
-                choose_target = function(targets)
-                    for _, t in ipairs(targets) do
-                        local b = t:lower()
-                        if (vim.endswith(t, '.sln') or vim.endswith(t, '.slnx') or vim.endswith(t, '.slnf')) then
-                            if not b:find('test', 1, true) then
-                                return t
-                            end
-                        end
-                    end
-                    for _, t in ipairs(targets) do
-                        if not t:lower():find('test', 1, true) then
-                            return t
-                        end
-                    end
-                    return targets[1]
-                end,
-            })
-        end,
-    },
 }
 

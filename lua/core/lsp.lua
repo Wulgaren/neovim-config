@@ -26,28 +26,6 @@ local function root_dir(bufnr, markers)
   return vim.fs.root(path, markers) or vim.fn.getcwd()
 end
 
--- vim.fs.root does not match globs like *.sln; OmniSharp needs solution/project roots.
-local function dotnet_root_dir(bufnr)
-  local path = vim.api.nvim_buf_get_name(bufnr)
-  if path == '' then
-    return vim.fn.getcwd()
-  end
-  for _, pattern in ipairs({ '*.sln', '*.slnx', '*.vbproj', 'omnisharp.json', '.git' }) do
-    local found = vim.fs.find(pattern, { path = path, upward = true })[1]
-    if found then
-      return vim.fs.dirname(found)
-    end
-  end
-  return vim.fn.getcwd()
-end
-
--- OmniSharp occasionally sends JSON null; Neovim 0.12 reports INVALID_SERVER_MESSAGE (harmless).
-local function omnisharp_on_error(code, err)
-  if code == vim.lsp.rpc.client_errors.INVALID_SERVER_MESSAGE and err == vim.NIL then
-    return
-  end
-end
-
 local function start_lsp(bufnr, name, cmd, markers, opts)
   if not cmd or not command_exists(cmd[1]) then
     return
@@ -140,40 +118,6 @@ local function lua_lsp_cmd()
   })
 end
 
-local omnisharp_dll = join_path(vim.fn.stdpath('data'), 'mason', 'packages', 'omnisharp', 'libexec', 'OmniSharp.dll')
-
-local function omnisharp_lsp_cmd()
-  local lsp_args = {
-    '-z',
-    '--hostPID',
-    tostring(vim.fn.getpid()),
-    'DotNet:enablePackageRestore=false',
-    '--encoding',
-    'utf-8',
-    '--languageserver',
-  }
-  local function cmd(...)
-    return vim.list_extend({ ... }, lsp_args)
-  end
-  if is_windows then
-    return first_available_command({
-      cmd(mason_bin .. '\\OmniSharp.cmd'),
-      cmd(mason_bin .. '\\OmniSharp.EXE'),
-      cmd(mason_bin .. '\\omnisharp.cmd'),
-      cmd('dotnet', omnisharp_dll),
-      cmd('OmniSharp'),
-      cmd('omnisharp'),
-    })
-  end
-  return first_available_command({
-    cmd(join_path(mason_bin, 'OmniSharp')),
-    cmd(join_path(mason_bin, 'omnisharp')),
-    cmd('dotnet', omnisharp_dll),
-    cmd('OmniSharp'),
-    cmd('omnisharp'),
-  })
-end
-
 local function go_lsp_cmd()
   if is_windows then
     return first_available_command({
@@ -214,6 +158,26 @@ local function swift_lsp_cmd()
   end
   table.insert(candidates, { 'sourcekit-lsp' })
   return first_available_command(candidates)
+end
+
+local function vb_grep_symbol(bufnr, word)
+  word = word or vim.fn.expand('<cword>')
+  if word == '' then
+    return
+  end
+  local path = vim.api.nvim_buf_get_name(bufnr)
+  local cwd = require('core.dotnet_root').vb_root(path)
+  local ok, builtin = pcall(require, 'telescope.builtin')
+  if ok then
+    builtin.grep_string({
+      search = word,
+      cwd = cwd,
+      glob_pattern = '*.vb',
+      prompt_title = 'VB grep',
+    })
+  else
+    vim.notify(('grep for "%s" in %s'):format(word, cwd), vim.log.levels.INFO)
+  end
 end
 
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -335,9 +299,6 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
--- C# LSP handled by roslyn.nvim plugin (see lua/plugins/spec/lsp.lua).
--- VB.NET uses OmniSharp only (FileType vb below); do not attach OmniSharp to cs.
-
 vim.api.nvim_create_autocmd('FileType', {
   group = lsp_autocmd_group,
   pattern = { 'python' },
@@ -428,16 +389,16 @@ vim.api.nvim_create_autocmd('FileType', {
   group = lsp_autocmd_group,
   pattern = { 'vb' },
   callback = function(args)
-    start_lsp(args.buf, 'omnisharp', omnisharp_lsp_cmd(), {}, {
-      root_dir = dotnet_root_dir(args.buf),
-      on_error = omnisharp_on_error,
-      capabilities = {
-        workspace = { workspaceFolders = false },
-      },
-      settings = {
-        FormattingOptions = { EnableEditorConfigSupport = true },
-      },
-    })
+    local opts = { buffer = args.buf, silent = true }
+    vim.keymap.set('n', 'gd', function()
+      vb_grep_symbol(args.buf)
+    end, vim.tbl_extend('force', opts, { desc = 'VB symbol grep' }))
+    vim.keymap.set('n', 'gr', function()
+      vb_grep_symbol(args.buf)
+    end, vim.tbl_extend('force', opts, { desc = 'VB symbol grep' }))
+    vim.keymap.set('n', '<leader>gw', function()
+      vb_grep_symbol(args.buf)
+    end, vim.tbl_extend('force', opts, { desc = 'VB symbol grep' }))
   end,
 })
 
@@ -460,6 +421,9 @@ vim.api.nvim_create_autocmd('FileType', {
     })
   end,
 })
+
+-- C# → roslyn (nvim/lsp/roslyn.lua)
+vim.lsp.enable('roslyn')
 
 -- Optional: other plugins that use :sign with DiagnosticSign* names.
 for type, cp in pairs({
