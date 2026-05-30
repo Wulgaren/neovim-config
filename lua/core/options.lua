@@ -28,6 +28,7 @@ vim.opt.smartindent = true
 vim.opt.expandtab = true
 vim.opt.incsearch = true
 vim.opt.wrap = false
+vim.opt.winborder = "rounded"
 
 -- Windows: CRLF files mis-read as unix show trailing ^M. Prefer dos; re-read if first lines contain CR.
 if platform.is_windows then

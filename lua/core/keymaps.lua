@@ -55,6 +55,7 @@ vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
 -- Open file explorer
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
+vim.keymap.set("n", "<leader>e", vim.cmd.Ex)
 
 vim.api.nvim_create_user_command('MyTips', function()
   local path = vim.fs.joinpath(vim.fn.stdpath('config'), 'nvim_tips.md')

@@ -101,7 +101,7 @@ Non-focused windows use dimmer **NormalNC** so active split stands out.
 | `<Leader>sr` | `:substitute` whole buffer / selection |
 | `<Leader>p` | Visual: paste without overwritting default register |
 | `<Leader>d` | delete without overwritting default register |
-| `<Leader>pv` | built-in explorer (`Ex`) |
+| `<Leader>pv` / `<Leader>e` | built-in explorer (`Ex`) |
 | `<Leader>ko` | **NeoCodeium** toggle on/off (`:NeoCodeium toggle` — completions only; no server stop) |
 | `<C-u>` / `<C-d>` / `<C-f>` / `<C-b>` | scroll, cursor centered |
 | `n` / `N` | next/prev match, cursor centered |
