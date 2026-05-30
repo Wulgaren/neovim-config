@@ -128,6 +128,7 @@ Non-focused windows use dimmer **NormalNC** so active split stands out.
 | **Telescope** |  `<C-h>` | list of marks | 
 | **Telescope** | `<Leader>fb` | buffers |
 | **Telescope** | `<Leader>fs` | LSP document symbols |
+| **Telescope** | `gr` | LSP references |
 
 
 ### LSP (server attached)
@@ -135,7 +136,6 @@ Non-focused windows use dimmer **NormalNC** so active split stands out.
 | Key | Action |
 |-----|--------|
 | `gd` | definition |
-| `gr` | references |
 | `K` | hover docs |
 | `<Leader>rn` | rename |
 | `<Leader>ca` | code actions |

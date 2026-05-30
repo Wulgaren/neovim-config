@@ -220,7 +220,14 @@ vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
     local opts = { buffer = args.buf, silent = true }
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    vim.keymap.set('n', 'gr', function()
+      local ok, builtin = pcall(require, 'telescope.builtin')
+      if ok then
+        builtin.lsp_references()
+      else
+        vim.lsp.buf.references()
+      end
+    end, vim.tbl_extend('force', opts, { desc = 'LSP references (Telescope)' }))
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
     vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
     vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
