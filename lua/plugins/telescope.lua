@@ -25,9 +25,7 @@ local TELESCOPE_RG_EXCLUDE_GLOBS = {
   '!**/*syncfusion*',
   '!**/jquery*.js',
   '!**/jquery*.map',
-  '!**/bootstrap*.js',
-  '!**/bootstrap*.css',
-  '!**/bootstrap*.map',
+  '!**/bootstrap/**',
 }
 
 local function telescope_rg_glob_cli_args()
