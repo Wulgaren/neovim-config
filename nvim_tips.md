@@ -101,7 +101,7 @@ Non-focused windows use dimmer **NormalNC** so active split stands out.
 | `<Leader>sr` | `:substitute` whole buffer / selection |
 | `<Leader>p` | Visual: paste without overwritting default register |
 | `<Leader>d` | delete without overwritting default register |
-| `<Leader>pv` / `<Leader>e` | built-in explorer (`Ex`) |
+| `<Leader>pv` / `<Leader>e` | built-in explorer (`Ex`) — see **File explorer** below |
 | `<Leader>ko` | **NeoCodeium** toggle on/off (`:NeoCodeium toggle` — completions only; no server stop) |
 | `<C-u>` / `<C-d>` / `<C-f>` / `<C-b>` | scroll, cursor centered |
 | `n` / `N` | next/prev match, cursor centered |
@@ -118,6 +118,19 @@ Non-focused windows use dimmer **NormalNC** so active split stands out.
 |---------|--------|
 | `:MyTips` | open this file below (`render-markdown` styling like other `.md`) |
 | `:wq` | like `ZZ` (write or prompt, then quit) |
+
+### File explorer (Netrw / `:Ex`)
+
+Open with `<Leader>pv` or `<Leader>e`.
+
+| Key | Action |
+|-----|--------|
+| `%` | create **file** (prompt for name, then open) |
+| `d` | create **folder** (`mkdir`) |
+| `Enter` / `o` | open file or directory |
+| `D` | delete file or directory |
+| `R` | rename |
+| `-` | go up one directory |
 
 ### Telescope
 
