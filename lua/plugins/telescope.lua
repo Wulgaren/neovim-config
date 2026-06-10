@@ -100,11 +100,12 @@ end
 
 local LIVE_GREP_OPTS = {
   cwd = vim.fn.getcwd(),
-  layout_strategy = 'vertical',
+  layout_strategy = 'horizontal',
   layout_config = {
+    width = 0.95,
     height = 0.9,
-    prompt_position = 'bottom',
-    preview_height = 0.42,
+    preview_width = 0.55,
+    prompt_position = 'top',
   },
   mappings = {
     i = {
