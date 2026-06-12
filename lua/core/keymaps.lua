@@ -132,3 +132,49 @@ vim.keymap.set("n", "=ap", "ma=ap'a")
 vim.keymap.set('n', '<leader>dd', function()
   vim.diagnostic.open_float({ scope = 'line', focus = false })
 end, { silent = true, desc = 'Diagnostic details (float, keep focus)' })
+
+local function close_terminal_window(buf)
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+    if vim.api.nvim_win_get_buf(win) == buf then
+      vim.api.nvim_win_close(win, true)
+      return true
+    end
+  end
+  return false
+end
+
+local function setup_leader_t_terminal(buf)
+  vim.b[buf].leader_t_terminal = true
+
+  vim.keymap.set('n', 'q', function()
+    close_terminal_window(buf)
+  end, { buffer = buf, desc = 'Close terminal window' })
+
+  vim.keymap.set('n', '<Esc>', function()
+    close_terminal_window(buf)
+  end, { buffer = buf, desc = 'Close terminal window' })
+
+  vim.keymap.set('t', '<Esc><Esc>', function()
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-\\><C-n>', true, false, true), 'n', false)
+    close_terminal_window(buf)
+  end, { buffer = buf, desc = 'Close terminal window' })
+end
+
+vim.api.nvim_create_autocmd('TermClose', {
+  callback = function(event)
+    if not vim.b[event.buf].leader_t_terminal then
+      return
+    end
+    vim.schedule(function()
+      close_terminal_window(event.buf)
+    end)
+  end,
+})
+
+vim.keymap.set('n', '<leader>t', function()
+  vim.cmd.vnew()
+  vim.cmd.term()
+  setup_leader_t_terminal(vim.api.nvim_get_current_buf())
+  vim.cmd.wincmd('J')
+  vim.api.nvim_win_set_height(0, 15)
+end, { desc = 'Terminal (bottom split)' })

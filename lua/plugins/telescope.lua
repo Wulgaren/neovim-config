@@ -132,12 +132,105 @@ local function telescope_live_grep()
   telescope_builtin.live_grep(telescope_live_grep_opts({}))
 end
 
+local function git_worktree()
+  local fugitive_dir = vim.fn.FugitiveGitDir()
+  if fugitive_dir ~= '' then
+    return vim.fn.fnamemodify(fugitive_dir, ':h')
+  end
+  local wt = vim.fn.systemlist({ 'git', 'rev-parse', '--show-toplevel' })[1]
+  if vim.v.shell_error == 0 and wt ~= '' then
+    return wt
+  end
+  return nil
+end
+
+local function normalize_branch_ref(ref)
+  return ref:gsub('^remotes/origin/', ''):gsub('^origin/', '')
+end
+
+local function git_branch_names(worktree)
+  local lines = vim.fn.systemlist({
+    'git',
+    '-C',
+    worktree,
+    'branch',
+    '-a',
+    '--format=%(refname:short)',
+  })
+  if vim.v.shell_error ~= 0 then
+    return nil
+  end
+
+  local seen = {}
+  local branches = {}
+  for _, ref in ipairs(lines) do
+    local name = normalize_branch_ref(ref)
+    if name ~= '' and name ~= 'HEAD' and not seen[name] then
+      seen[name] = true
+      branches[#branches + 1] = name
+    end
+  end
+  table.sort(branches)
+  return branches
+end
+
+local function telescope_git_branches()
+  local worktree = git_worktree()
+  if not worktree then
+    vim.notify('Telescope: not in a Git repository', vim.log.levels.WARN)
+    return
+  end
+
+  local branches = git_branch_names(worktree)
+  if not branches then
+    vim.notify('Telescope: failed to list Git branches', vim.log.levels.ERROR)
+    return
+  end
+
+  local current = vim.fn.systemlist({ 'git', '-C', worktree, 'branch', '--show-current' })[1] or ''
+  local actions = require('telescope.actions')
+  local action_state = require('telescope.actions.state')
+  local conf = require('telescope.config').values
+  local finders = require('telescope.finders')
+  local pickers = require('telescope.pickers')
+
+  pickers.new({}, {
+    prompt_title = 'Git Branches',
+    finder = finders.new_table({
+      results = branches,
+      entry_maker = function(name)
+        local marker = name == current and '* ' or '  '
+        return {
+          value = name,
+          display = marker .. name,
+          ordinal = name,
+        }
+      end,
+    }),
+    sorter = conf.generic_sorter({}),
+    attach_mappings = function(_, map)
+      local function switch_branch(prompt_bufnr)
+        local entry = action_state.get_selected_entry()
+        actions.close(prompt_bufnr)
+        if not entry or not entry.value then
+          return
+        end
+        vim.cmd({ 'Git', 'switch', entry.value })
+      end
+      map('i', '<CR>', switch_branch)
+      map('n', '<CR>', switch_branch)
+      return true
+    end,
+  }):find()
+end
+
 local telescope_autocmd_group = vim.api.nvim_create_augroup('config-telescope-autocmds', { clear = true })
 
 vim.keymap.set('n', '<C-p>', telescope_files, { silent = true, desc = 'Telescope find files' })
 vim.keymap.set('n', '<leader>fg', telescope_live_grep, { silent = true, desc = 'Telescope live grep' })
 vim.keymap.set('n', '<C-t>', telescope_live_grep, { silent = true, desc = 'Telescope live grep' })
 vim.keymap.set('n', '<leader>fb', telescope_builtin.buffers, { silent = true, desc = 'Telescope buffers' })
+vim.keymap.set('n', '<leader>gc', telescope_git_branches, { silent = true, desc = 'Git switch branch' })
 vim.keymap.set('n', '<leader>fs', telescope_builtin.lsp_document_symbols, { silent = true, desc = 'Telescope LSP document symbols' })
 vim.keymap.set('n', '<C-h>', telescope_builtin.marks, { silent = true, desc = 'Telescope marks' })
 

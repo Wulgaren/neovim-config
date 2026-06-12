@@ -107,6 +107,7 @@ Non-focused windows use dimmer **NormalNC** so active split stands out.
 | `n` / `N` | next/prev match, cursor centered |
 | Visual `J` / `K` | move selection down/up |
 | `=ap` | reindent paragraph; mark `a` restores cursor |
+| `<leader>t` | terminal in Vim - quit with `ESC or q` |
 
 ---
 
