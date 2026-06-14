@@ -143,22 +143,25 @@ local function close_terminal_window(buf)
   return false
 end
 
+vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+
 local function setup_leader_t_terminal(buf)
   vim.b[buf].leader_t_terminal = true
 
   vim.keymap.set('n', 'q', function()
     close_terminal_window(buf)
   end, { buffer = buf, desc = 'Close terminal window' })
-
-  vim.keymap.set('n', '<Esc>', function()
-    close_terminal_window(buf)
-  end, { buffer = buf, desc = 'Close terminal window' })
-
-  vim.keymap.set('t', '<Esc><Esc>', function()
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-\\><C-n>', true, false, true), 'n', false)
-    close_terminal_window(buf)
-  end, { buffer = buf, desc = 'Close terminal window' })
 end
+
+vim.api.nvim_create_autocmd('TermOpen', {
+  callback = function(event)
+    if not vim.b.leader_t_terminal then
+      return
+    end
+    vim.b.leader_t_terminal = nil
+    setup_leader_t_terminal(event.buf)
+  end,
+})
 
 vim.api.nvim_create_autocmd('TermClose', {
   callback = function(event)
@@ -173,8 +176,8 @@ vim.api.nvim_create_autocmd('TermClose', {
 
 vim.keymap.set('n', '<leader>t', function()
   vim.cmd.vnew()
+  vim.b.leader_t_terminal = true
   vim.cmd.term()
-  setup_leader_t_terminal(vim.api.nvim_get_current_buf())
   vim.cmd.wincmd('J')
   vim.api.nvim_win_set_height(0, 15)
   vim.cmd.startinsert()

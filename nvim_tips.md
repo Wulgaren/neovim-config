@@ -132,6 +132,7 @@ Open with `<Leader>pv` or `<Leader>e`.
 | `D` | delete file or directory |
 | `R` | rename |
 | `-` | go up one directory |
+| `lcd %` | set current path in Vim |
 
 ### Telescope
 
