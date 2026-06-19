@@ -71,3 +71,9 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+
+--------------
+--- MACROS ---
+--------------
+local esc = vim.api.nvim_replace_termcodes('<Esc>', true, true, true)
+vim.fn.setreg("l", "yoconsole.log('" .. esc .. "pa: '" .. esc .. "a, " .. esc .. "pa)" .. esc .. "l")

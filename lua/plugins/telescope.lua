@@ -148,6 +148,10 @@ local function normalize_branch_ref(ref)
   return ref:gsub('^remotes/origin/', ''):gsub('^origin/', '')
 end
 
+local function branch_name_from_prompt(prompt)
+  return vim.trim(prompt or ''):gsub('%s+', '_')
+end
+
 local function git_branch_names(worktree)
   local lines = vim.fn.systemlist({
     'git',
@@ -195,7 +199,7 @@ local function telescope_git_branches()
   local pickers = require('telescope.pickers')
 
   pickers.new({}, {
-    prompt_title = 'Git Branches',
+    prompt_title = 'Git Branches (create on Enter if no match)',
     finder = finders.new_table({
       results = branches,
       entry_maker = function(name)
@@ -209,16 +213,34 @@ local function telescope_git_branches()
     }),
     sorter = conf.generic_sorter({}),
     attach_mappings = function(_, map)
-      local function switch_branch(prompt_bufnr)
+      local function switch_or_create_branch(prompt_bufnr)
         local entry = action_state.get_selected_entry()
-        actions.close(prompt_bufnr)
-        if not entry or not entry.value then
+        local prompt = action_state.get_current_line()
+
+        if entry and entry.value then
+          actions.close(prompt_bufnr)
+          local err = vim.fn.system({ 'git', '-C', worktree, 'switch', entry.value })
+          if vim.v.shell_error ~= 0 then
+            vim.notify('Telescope: failed to switch branch: ' .. vim.trim(err), vim.log.levels.ERROR)
+          end
           return
         end
-        vim.cmd({ 'Git', 'switch', entry.value })
+
+        local branch = branch_name_from_prompt(prompt)
+        if branch == '' then
+          return
+        end
+
+        actions.close(prompt_bufnr)
+        local err = vim.fn.system({ 'git', '-C', worktree, 'switch', '-c', branch })
+        if vim.v.shell_error ~= 0 then
+          vim.notify('Telescope: failed to create branch: ' .. vim.trim(err), vim.log.levels.ERROR)
+        else
+          vim.notify('Created and switched to: ' .. branch, vim.log.levels.INFO)
+        end
       end
-      map('i', '<CR>', switch_branch)
-      map('n', '<CR>', switch_branch)
+      map('i', '<CR>', switch_or_create_branch)
+      map('n', '<CR>', switch_or_create_branch)
       return true
     end,
   }):find()
@@ -229,7 +251,7 @@ local telescope_autocmd_group = vim.api.nvim_create_augroup('config-telescope-au
 vim.keymap.set('n', '<C-p>', telescope_files, { silent = true, desc = 'Telescope find files' })
 vim.keymap.set('n', '<leader>fg', telescope_live_grep, { silent = true, desc = 'Telescope live grep' })
 vim.keymap.set('n', '<C-t>', telescope_live_grep, { silent = true, desc = 'Telescope live grep' })
-vim.keymap.set('n', '<leader>fb', telescope_builtin.buffers, { silent = true, desc = 'Telescope buffers' })
+vim.keymap.set('n', '<leader>b', telescope_builtin.buffers, { silent = true, desc = 'Telescope buffers' })
 vim.keymap.set('n', '<leader>gc', telescope_git_branches, { silent = true, desc = 'Git switch branch' })
 vim.keymap.set('n', '<leader>fs', telescope_builtin.lsp_document_symbols, { silent = true, desc = 'Telescope LSP document symbols' })
 vim.keymap.set('n', '<C-h>', telescope_builtin.marks, { silent = true, desc = 'Telescope marks' })

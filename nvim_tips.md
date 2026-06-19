@@ -83,9 +83,12 @@
 | Key | Action |
 |-----|--------|
 | `<C-w><C-w>` | cycle windows |
+| `<C-w>q` | close window |
+| `:bd` | close buffer |
 | `<C-w>h` / `j` / `k` / `l` | focus left / down / up / right |
 | `<C-w>s` | split horizontal (top/bottom) |
 | `<C-w>v` | split vertical (left/right) |
+| `<C-w>_` | maximizing vertically |
 
 Non-focused windows use dimmer **NormalNC** so active split stands out.
 
@@ -108,6 +111,7 @@ Non-focused windows use dimmer **NormalNC** so active split stands out.
 | Visual `J` / `K` | move selection down/up |
 | `=ap` | reindent paragraph; mark `a` restores cursor |
 | `<leader>t` | terminal in Vim - quit with `ESC or q` |
+| Visual `@l` | add console log |
 
 ---
 
@@ -141,7 +145,7 @@ Open with `<Leader>pv` or `<Leader>e`.
 | **Telescope** | `<C-p>` | find files (project) |
 | **Telescope** |  `<C-t>`, `<Leader>fg` | live grep (empty prompt) |
 | **Telescope** |  `<C-h>` | list of marks | 
-| **Telescope** | `<Leader>fb` | buffers |
+| **Telescope** | `<Leader>b` | buffers |
 | **Telescope** | `<Leader>fs` | LSP document symbols |
 | **Telescope** | `gr` | LSP references |
 

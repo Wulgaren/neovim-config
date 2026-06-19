@@ -179,6 +179,5 @@ vim.keymap.set('n', '<leader>t', function()
   vim.b.leader_t_terminal = true
   vim.cmd.term()
   vim.cmd.wincmd('J')
-  vim.api.nvim_win_set_height(0, 15)
   vim.cmd.startinsert()
 end, { desc = 'Terminal (bottom split)' })
