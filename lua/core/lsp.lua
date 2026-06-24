@@ -195,9 +195,16 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
     vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
     vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
-    vim.keymap.set('n', '<leader>f', function()
-      vim.lsp.buf.format({ async = false })
-    end, opts)
+    vim.keymap.set({ 'n', 'v' }, '<leader>f', function()
+      local format_opts = { async = false }
+      if vim.fn.mode():match('^[vV\22]') then
+        format_opts.range = {
+          start = vim.api.nvim_buf_get_mark(0, '<'),
+          ['end'] = vim.api.nvim_buf_get_mark(0, '>'),
+        }
+      end
+      vim.lsp.buf.format(format_opts)
+    end, vim.tbl_extend('force', opts, { desc = 'Format buffer or selection' }))
   end,
 })
 
