@@ -152,6 +152,60 @@ local function branch_name_from_prompt(prompt)
   return vim.trim(prompt or ''):gsub('%s+', '_')
 end
 
+local function local_branch_exists(worktree, branch)
+  vim.fn.system({ 'git', '-C', worktree, 'show-ref', '--verify', '--quiet', 'refs/heads/' .. branch })
+  return vim.v.shell_error == 0
+end
+
+local function remote_branch_exists(worktree, branch)
+  vim.fn.system({ 'git', '-C', worktree, 'show-ref', '--verify', '--quiet', 'refs/remotes/origin/' .. branch })
+  return vim.v.shell_error == 0
+end
+
+local function branch_has_upstream(worktree)
+  vim.fn.system({ 'git', '-C', worktree, 'rev-parse', '--abbrev-ref', '--symbolic-full-name', '@{u}' })
+  return vim.v.shell_error == 0
+end
+
+local function ensure_upstream(worktree, branch)
+  if not remote_branch_exists(worktree, branch) or branch_has_upstream(worktree) then
+    return
+  end
+
+  local err = vim.fn.system({
+    'git',
+    '-C',
+    worktree,
+    'branch',
+    '--set-upstream-to=origin/' .. branch,
+    branch,
+  })
+  if vim.v.shell_error ~= 0 then
+    vim.notify('Telescope: failed to set upstream: ' .. vim.trim(err), vim.log.levels.WARN)
+  end
+end
+
+local function switch_to_branch(worktree, branch)
+  if local_branch_exists(worktree, branch) then
+    local err = vim.fn.system({ 'git', '-C', worktree, 'switch', branch })
+    if vim.v.shell_error ~= 0 then
+      return 'Telescope: failed to switch branch: ' .. vim.trim(err)
+    end
+    ensure_upstream(worktree, branch)
+    return nil
+  end
+
+  if remote_branch_exists(worktree, branch) then
+    local err = vim.fn.system({ 'git', '-C', worktree, 'switch', '--track', 'origin/' .. branch })
+    if vim.v.shell_error ~= 0 then
+      return 'Telescope: failed to track remote branch: ' .. vim.trim(err)
+    end
+    return nil
+  end
+
+  return 'Telescope: branch not found locally or on origin: ' .. branch
+end
+
 local function git_branch_names(worktree)
   local lines = vim.fn.systemlist({
     'git',
@@ -219,9 +273,9 @@ local function telescope_git_branches()
 
         if entry and entry.value then
           actions.close(prompt_bufnr)
-          local err = vim.fn.system({ 'git', '-C', worktree, 'switch', entry.value })
-          if vim.v.shell_error ~= 0 then
-            vim.notify('Telescope: failed to switch branch: ' .. vim.trim(err), vim.log.levels.ERROR)
+          local err = switch_to_branch(worktree, entry.value)
+          if err then
+            vim.notify(err, vim.log.levels.ERROR)
           end
           return
         end
