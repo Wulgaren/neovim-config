@@ -24,7 +24,7 @@
 | `/ or ?` | Search forwards/backwards |
 | `<C-v> then <I/A>` | Visual **block** mode then insert |
 | `gi` | Insert in the last place you edited |
-| `:g/your_string/d` | delete strings with specific text ~
+| `:g/your_string/d` | delete strings with specific text (:g! - delete ones that don't include the string) |
 
 
 ## Change operators
