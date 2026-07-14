@@ -305,6 +305,7 @@ local telescope_autocmd_group = vim.api.nvim_create_augroup('config-telescope-au
 vim.keymap.set('n', '<C-p>', telescope_files, { silent = true, desc = 'Telescope find files' })
 vim.keymap.set('n', '<leader>fg', telescope_live_grep, { silent = true, desc = 'Telescope live grep' })
 vim.keymap.set('n', '<C-t>', telescope_live_grep, { silent = true, desc = 'Telescope live grep' })
+vim.keymap.set('n', '<C-j>', telescope_builtin.buffers, { silent = true, desc = 'Telescope buffers' })
 vim.keymap.set('n', '<leader>b', telescope_builtin.buffers, { silent = true, desc = 'Telescope buffers' })
 vim.keymap.set('n', '<leader>gc', telescope_git_branches, { silent = true, desc = 'Git switch branch' })
 vim.keymap.set('n', '<leader>fs', telescope_builtin.lsp_document_symbols, { silent = true, desc = 'Telescope LSP document symbols' })

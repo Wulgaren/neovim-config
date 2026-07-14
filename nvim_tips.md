@@ -146,7 +146,7 @@ Open with `<Leader>pv` or `<Leader>e`.
 | **Telescope** | `<C-p>` | find files (project) |
 | **Telescope** |  `<C-t>`, `<Leader>fg` | live grep (empty prompt) |
 | **Telescope** |  `<C-h>` | list of marks | 
-| **Telescope** | `<Leader>b` | buffers |
+| **Telescope** | `<C-j>`, `<Leader>b` | buffers |
 | **Telescope** | `<Leader>fs` | LSP document symbols |
 | **Telescope** | `gr` | LSP references |
 
