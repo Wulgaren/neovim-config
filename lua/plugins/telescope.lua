@@ -26,6 +26,7 @@ local TELESCOPE_RG_EXCLUDE_GLOBS = {
   '!**/jquery*.js',
   '!**/jquery*.map',
   '!**/bootstrap/**',
+  '!**/tests/mocks/**',
 }
 
 local function telescope_rg_glob_cli_args()
