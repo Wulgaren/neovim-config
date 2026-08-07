@@ -13,24 +13,6 @@ vim.keymap.set('n', 'Q', '<Nop>', { desc = 'Disable Ex mode (Q)' })
 
 vim.keymap.set('n', '<leader>sr', ':%s///g<Left><Left><Left>', { desc = 'Find and replace in buffer' })
 vim.keymap.set('x', '<leader>sr', ':s///g<Left><Left><Left>', { desc = 'Find and replace in selection' })
-vim.keymap.set('n', ']<space>', 'mzo<esc>`z', { silent = true, desc = 'Insert new line after cursor' })
-vim.keymap.set('n', '[<space>', 'mzO<esc>`z', { silent = true, desc = 'Insert new line before cursor' })
-
-local function write_or_prompt_and_quit()
-  if vim.fn.expand('%') == '' then
-    local name = vim.fn.input('Save as: ', '', 'file')
-    if name == '' then
-      return
-    end
-    vim.cmd('write ' .. vim.fn.fnameescape(name))
-  else
-    vim.cmd('write')
-  end
-  vim.cmd('confirm quit')
-end
-
-vim.api.nvim_create_user_command('WQ', write_or_prompt_and_quit, {})
-vim.keymap.set('n', 'ZZ', write_or_prompt_and_quit, { silent = true })
 vim.keymap.set('n', 'ZX', '<cmd>qa!<CR>', {
   silent = true,
   desc = 'Quit all windows/tabs, discard unsaved buffers (:qa!)',
@@ -46,9 +28,6 @@ vim.keymap.set('n', 'N', 'Nzzzv')
 
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
-
--- netrw: <leader>e is Lexplore in netrw.lua; pv matches
-vim.keymap.set('n', '<leader>pv', '<cmd>Lexplore<CR>', { silent = true, desc = 'Netrw Lexplore' })
 
 vim.api.nvim_create_user_command('MyTips', function()
   local path = vim.fs.joinpath(vim.fn.stdpath('config'), 'nvim_tips.md')

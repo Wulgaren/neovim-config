@@ -86,6 +86,11 @@ local function open_qf_in_main()
 	end
 
 	vim.cmd("edit " .. vim.fn.fnameescape(fname))
+	-- pedit may already have loaded this buf; plain :edit then skips BufRead/FileType.
+	-- Empty filetype → no LSP attach. Force detect when missing.
+	if vim.bo.filetype == "" then
+		vim.cmd("filetype detect")
+	end
 	local lnum = math.max(item.lnum or 1, 1)
 	local col = math.max((item.col or 1) - 1, 0)
 	local line_count = vim.api.nvim_buf_line_count(0)
@@ -127,13 +132,32 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+--- UI grep via argv (not :grep): avoids Vim `#`/`%` cmdline expand poisoning rg,
+--- and -F so pasted code (`cy.get("…")`) is literal, not broken regex.
 local function run_grep()
 	vim.ui.input({ prompt = "Grep: " }, function(pattern)
 		if not pattern or pattern == "" then
 			return
 		end
-		-- shellescape(..., true): block cmdline expansion of <Leader>, %, #, <cword>, …
-		vim.cmd("silent grep! " .. vim.fn.shellescape(pattern, true))
+
+		local cmd = { "rg", "--vimgrep", "--smart-case", "--hidden", "-F" }
+		vim.list_extend(cmd, ignores.rg_glob_args())
+		cmd[#cmd + 1] = "--"
+		cmd[#cmd + 1] = pattern
+
+		local lines = vim.fn.systemlist(cmd)
+		local code = vim.v.shell_error
+		-- rg: 0 matches, 1 no match, ≥2 error
+		if code > 1 then
+			vim.notify(table.concat(lines, "\n"), vim.log.levels.ERROR)
+			return
+		end
+
+		vim.fn.setqflist({}, "r", {
+			title = "grep " .. pattern,
+			lines = lines,
+			efm = vim.o.grepformat,
+		})
 		vim.cmd("copen")
 	end)
 end

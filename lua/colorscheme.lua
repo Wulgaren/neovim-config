@@ -3,7 +3,7 @@ local function apply_readability_overrides(is_light)
 	local fg_nc = is_light and "#7a8199" or "#a7b0cc"
 	local line_nr = is_light and "#525a76" or "#cfd5f2"
 	local comment_fg = is_light and line_nr or "#737994"
-	local border = is_light and "#59627f" or "#d7defc"
+	local border = is_light and "#59627f" or "#6c7086"
 	local cursorline_bg = is_light and "#e9ecf6" or "#3b3f52"
 
 	local groups = {

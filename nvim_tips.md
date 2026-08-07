@@ -67,7 +67,7 @@
 |-----|--------|
 | `m` + letter | lowercase: buffer mark; uppercase: global mark |
 | `'` + letter | jump to mark |
-| `<C-h>` | marks picker (`vim.ui.select`) |
+| `<C-h>` | `:marks` (native mark list) |
 
 ## Save & quit
 
@@ -141,12 +141,12 @@ Open with `<Leader>pv` or `<Leader>e`.
 
 | Key | Action |
 |-----|--------|
-| `<C-p>` | fuzzy find files (`:find` + `matchfuzzy` / `rg --files`) |
+| `<C-p>` | fuzzy find files (`:find` + `matchfuzzy` / `rg --files`; needs `rg`) |
 | `<C-t>` / `<Leader>fg` | ripgrep → quickfix; cursor previews (`pedit`); `<CR>` opens in main window (not preview) |
-| `<C-h>` | marks picker |
-| `<C-j>` / `<Leader>b` | buffers picker |
+| `<C-h>` | `:marks` |
+| `<C-j>` / `<Leader>b` | `:b ` (native buffer, Tab complete) |
 | `<Leader>fs` | LSP document symbols → loclist |
-| `<Leader>gc` | `:GitSwitch ` — Tab complete branch; unknown name creates |
+| `<Leader>gc` | `:GitSwitch ` — Tab complete (`branch -a`); `checkout`, else `-b` (spaces → `_`) |
 ### LSP (server attached)
 
 | Key | Action |
@@ -171,7 +171,7 @@ Open with `<Leader>pv` or `<Leader>e`.
 | `<Leader>gB` | blame current line |
 | `<Leader>gl` | log current file |
 | `<Leader>gL` | log / history for current line |
-| `<Leader>gc` | `:GitSwitch` — Tab complete / create if missing |
+| `<Leader>gc` | `:GitSwitch` — `checkout` / `-b`; Tab = local+remote |
 
 **In `:Git` status — staging**
 

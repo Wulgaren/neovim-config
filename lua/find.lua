@@ -1,29 +1,7 @@
 local ignores = require("ignores")
 
-local has_rg = vim.fn.executable("rg") == 1
 local cached_cwd ---@type string|nil
 local cached_files ---@type string[]|nil
-
-local function list_via_rg()
-	local cmd = { "rg", "--files", "--hidden" }
-	vim.list_extend(cmd, ignores.rg_glob_args())
-	local files = vim.fn.systemlist(cmd)
-	if vim.v.shell_error ~= 0 then
-		return nil
-	end
-	return files
-end
-
-local function list_via_glob()
-	local files = vim.fn.glob("**/*", true, true)
-	local result = {}
-	for _, f in ipairs(files) do
-		if vim.fn.isdirectory(f) == 0 and not ignores.should_ignore(f) then
-			result[#result + 1] = f
-		end
-	end
-	return result
-end
 
 local function list_files()
 	local cwd = vim.fn.getcwd()
@@ -31,12 +9,11 @@ local function list_files()
 		return cached_files
 	end
 
-	local files
-	if has_rg then
-		files = list_via_rg()
-	end
-	if not files then
-		files = list_via_glob()
+	local cmd = { "rg", "--files", "--hidden" }
+	vim.list_extend(cmd, ignores.rg_glob_args())
+	local files = vim.fn.systemlist(cmd)
+	if vim.v.shell_error ~= 0 then
+		files = {}
 	end
 
 	cached_cwd = cwd
