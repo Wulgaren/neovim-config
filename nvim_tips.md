@@ -25,6 +25,7 @@
 | `<C-v> then <I/A>` | Visual **block** mode then insert |
 | `gi` | Insert in the last place you edited |
 | `:g/your_string/d` | delete strings with specific text (:g! - delete ones that don't include the string) |
+| `:w !sudo tee %` | write file with sudo privileges |
 
 ## Change operators
 
@@ -58,7 +59,7 @@
 |-----|--------|
 | `*` | search forward for word under cursor |
 | `g*` | search forward for word under cursor (includes when word is part of other word) |
-| `gn` / `gN` | operate on **next/previous occurrence** (`dgn`, `.`, …) |
+| `gn` / `gN` | operate on **next/previous occurrence** (`dgn`, `.`; see `g*` section) |
 | — | after search: `ciw`, then `n` and `.` to repeat on next matches |
 
 ## Marks
@@ -67,7 +68,7 @@
 |-----|--------|
 | `m` + letter | lowercase: buffer mark; uppercase: global mark |
 | `'` + letter | jump to mark |
-| `<C-h>` | `:marks` (native mark list) |
+| `<C-h>` | list of marks |
 
 ## Save & quit
 
@@ -104,7 +105,6 @@ Non-focused windows use dimmer **NormalNC** so active split stands out.
 | `Q` | disabled |
 | `<Leader>sr` | `:substitute` whole buffer / selection |
 | `<Leader>pv` / `<Leader>e` | netrw `Lexplore` — see **File explorer** below |
-| `<Leader>ko` | **NeoCodeium** toggle (`:NeoCodeium toggle`; `!` stops Windsurf server) |
 | `<C-u>` / `<C-d>` / `<C-f>` / `<C-b>` | scroll, cursor centered |
 | `n` / `N` | next/prev match, cursor centered |
 | Visual `J` / `K` | move selection down/up |
@@ -121,8 +121,7 @@ Non-focused windows use dimmer **NormalNC** so active split stands out.
 | Command | Action |
 |---------|--------|
 | `:MyTips` | open this file below |
-| `:WQ` | like `ZZ` (write or prompt, then quit) |
-| `:CatppuccinLight` / `:CatppuccinDark` | builtin catppuccin + readability overrides |
+| `:wq` | like `ZZ` (write or prompt, then quit) |
 
 ### File explorer (Netrw / `:Lexplore`)
 
@@ -136,17 +135,17 @@ Open with `<Leader>pv` or `<Leader>e`.
 | `D` | delete file or directory |
 | `R` | rename |
 | `-` | go up one directory |
+| `lcd %` | set current path in Vim |
 
-### Native find / grep / pickers
+### find / grep / pickers
 
 | Key | Action |
 |-----|--------|
-| `<C-p>` | fuzzy find files (`:find` + `matchfuzzy` / `rg --files`; needs `rg`) |
-| `<C-t>` / `<Leader>fg` | ripgrep → quickfix; cursor previews (`pedit`); `<CR>` opens in main window (not preview) |
-| `<C-h>` | `:marks` |
-| `<C-j>` / `<Leader>b` | `:b ` (native buffer, Tab complete) |
-| `<Leader>fs` | LSP document symbols → loclist |
-| `<Leader>gc` | `:GitSwitch ` — Tab complete (`branch -a`); `checkout`, else `-b` (spaces → `_`) |
+| `<C-p>` | go to file |
+| `<C-t>` / `<Leader>fg` | find text in directory |
+| `<C-j>` / `<Leader>b` | list of buffers |
+| `<Leader>fs` | LSP document symbols |
+
 ### LSP (server attached)
 
 | Key | Action |
@@ -156,8 +155,8 @@ Open with `<Leader>pv` or `<Leader>e`.
 | `gr` | references |
 | `<Leader>rn` | rename |
 | `<Leader>ca` | code actions |
-| `<Leader>f` | format buffer / selection (manual; no format-on-save) |
-| `<Leader>d` | buffer diagnostics → loclist |
+| `<Leader>f` | format buffer / selection |
+| `<Leader>d` | buffer diagnostics |
 
 ### Git — vim-fugitive
 
@@ -166,12 +165,12 @@ Open with `<Leader>pv` or `<Leader>e`.
 | Key | Action |
 |-----|--------|
 | `<Leader>gs` | `:Git` status |
-| `<Leader>gd` | smart `Gvdiffsplit` |
+| `<Leader>gd` | vertical git diff split |
 | `<Leader>gb` | `Git blame` (file) |
 | `<Leader>gB` | blame current line |
 | `<Leader>gl` | log current file |
 | `<Leader>gL` | log / history for current line |
-| `<Leader>gc` | `:GitSwitch` — `checkout` / `-b`; Tab = local+remote |
+| `<Leader>gc` | git branch switching, unknown name creates |
 
 **In `:Git` status — staging**
 
@@ -184,12 +183,13 @@ Open with `<Leader>pv` or `<Leader>e`.
 | `X` | discard change under cursor |
 | `=` | toggle inline diff |
 | `dv` / `ds` | vertical / horizontal diff vs index |
-| `cc` | commit |
+| `cc` | commit (edit message buffer; `wq` to finish) |
 
 | Key | Action |
 |-----|--------|
 | **`P`** (Unpushed commit line) | pre-fills `:Git push` |
 | `:Git push` / `:Git pull` | anytime |
+| `gp` / `gP` | jump Unpushed / Unpulled (`:h fugitive_gp`) |
 
 ### Git merge (`nvimdiff`)
 
@@ -201,7 +201,12 @@ Four buffers: **LOCAL**, **BASE**, **REMOTE**, **MERGED**. Work in **MERGED**.
 | `:diffg RE` | take from REMOTE |
 | `:diffput MERGED` | from LOCAL/REMOTE/BASE → push into MERGED |
 
+`[c / ]c` - to jump between changes.
+`[x / ]x` - to jump between merge conflicts.
 `[c` / `]c` — jump between changes. Save **MERGED**, exit with `:qa`; abort with `:cq`.
+
+Save **MERGED**, exit windows using `:qa`; Git continues.
+Or abort by using `:cq`.
 
 ### NeoCodeium (Windsurf ghost text)
 
