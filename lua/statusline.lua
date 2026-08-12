@@ -49,7 +49,7 @@ function _G._statusline()
 		end
 	end
 
-	local modified = vim.bo.modified and " *" or ""
+	local modified = vim.bo.modified and " [+]" or ""
 	return "%#StlMode# " .. mode .. " %*" .. branch .. " " .. path .. modified .. "%=" .. diag .. vim.bo.filetype .. " %l:%c"
 end
 
