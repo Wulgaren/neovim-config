@@ -30,24 +30,7 @@ local function git(args)
 	return vim.v.shell_error == 0, vim.trim(out)
 end
 
-local function ref_exists(ref)
-	local ok = git({ "git", "show-ref", "--verify", "--quiet", ref })
-	return ok
-end
-
----If origin has the same name and this branch has no upstream, set it.
-local function track_origin_if_missing(branch)
-	if not ref_exists("refs/remotes/origin/" .. branch) then
-		return
-	end
-	local ok = git({ "git", "rev-parse", "--abbrev-ref", "@{upstream}" })
-	if ok then
-		return
-	end
-	git({ "git", "branch", "-u", "origin/" .. branch, branch })
-end
-
----Cmdline: :GitSwitch {name} — switch; track origin if it exists; else checkout -b.
+---Cmdline: :GitSwitch {name} — switch or create; set origin upstream if missing.
 function M.git_switch(name)
 	local branch = sanitize_branch(name):gsub("^origin/", "")
 	if branch == "" then
@@ -55,32 +38,23 @@ function M.git_switch(name)
 		return
 	end
 
-	local local_ref = "refs/heads/" .. branch
-	local remote_ref = "refs/remotes/origin/" .. branch
-
-	if ref_exists(local_ref) then
-		local ok, err = git({ "git", "checkout", branch })
+	local ok, err = git({ "git", "switch", branch })
+	if not ok then
+		if not err:find("invalid reference", 1, true) then
+			vim.notify(err, vim.log.levels.ERROR)
+			return
+		end
+		ok, err = git({ "git", "switch", "-c", branch })
 		if not ok then
 			vim.notify(err, vim.log.levels.ERROR)
 			return
 		end
-		track_origin_if_missing(branch)
-		return
-	end
-
-	if ref_exists(remote_ref) then
-		local ok, err = git({ "git", "checkout", "--track", "origin/" .. branch })
-		if not ok then
-			vim.notify(err, vim.log.levels.ERROR)
-		end
-		return
-	end
-
-	local ok, err = git({ "git", "checkout", "-b", branch })
-	if not ok then
-		vim.notify(err, vim.log.levels.ERROR)
-	else
 		vim.notify("Created and switched to: " .. branch, vim.log.levels.INFO)
+	end
+
+	local has_upstream = git({ "git", "rev-parse", "--abbrev-ref", "@{upstream}" })
+	if not has_upstream then
+		git({ "git", "branch", "-u", "origin/" .. branch, branch })
 	end
 end
 
