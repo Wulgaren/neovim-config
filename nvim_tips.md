@@ -203,11 +203,8 @@ Four buffers: **LOCAL**, **BASE**, **REMOTE**, **MERGED**. Work in **MERGED**.
 | `:diffput MERGED` | from LOCAL/REMOTE/BASE → push into MERGED |
 
 `[c / ]c` - to jump between changes.
-`[x / ]x` - to jump between merge conflicts.
-`[c` / `]c` — jump between changes. Save **MERGED**, exit with `:qa`; abort with `:cq`.
-
-Save **MERGED**, exit windows using `:qa`; Git continues.
-Or abort by using `:cq`.
+`search for <<<<<<<` - to jump between merge conflicts.
+Save **MERGED**, exit with `:qa`; abort with `:cq`.
 
 ### NeoCodeium (Windsurf ghost text)
 
