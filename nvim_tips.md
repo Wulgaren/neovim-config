@@ -88,8 +88,9 @@
 | `<C-w>q` | close window |
 | `:bd` | close buffer |
 | `<C-w>h` / `j` / `k` / `l` | focus left / down / up / right |
-| `<C-w>s` | split horizontal (top/bottom) |
-| `<C-w>v` | split vertical (left/right) |
+| `<C-w>s` | split current buffer horizontal (top/bottom) |
+| `<C-w>v` | split current buffer vertical (left/right) |
+| `<C-w>n` | **new empty buffer**, horizontal split |
 | `<C-w>_` | maximizing vertically |
 
 Non-focused windows use dimmer **NormalNC** so active split stands out.
